@@ -6,8 +6,8 @@ def do_tov_delta():
     num_lines = 5
 
     for i in range(1, num_lines + 1):
-        input_file = f"{input_dir}/beta-crust{i}.dat"
-        output_file = f"{output_dir}/tov{i}.dat"
+        input_file = f"{input_dir}/beta-crust{i}.txt"
+        output_file = f"{output_dir}/tov{i}.txt"
     
         with open(output_file, "w"), open(temp_input_file, "w"):
             pass

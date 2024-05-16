@@ -1,4 +1,4 @@
-import os, subprocess
+import os
 
 def do_eos_delta():
     input_file = "delta_sorted.dat"
@@ -16,18 +16,18 @@ def do_eos_delta():
     for i in range(1, num_lines + 1):
         # Write the i-th line to the temporary input file
         with open(temp_input_file, "w") as tempfile:
-            tempfile.write(lines[i - 1])
+            for line in infile:
+                tempfile.write(line.strip()+"\n")
         
-        print(i)
+        #print(i)
         with open(temp_input_file, "r") as tempfile:
-            print(tempfile.read())
+            #its not necessary to remove the old files because it overwrites them
+            output_file = f"{output_dir}/beta-eq-eos{i}.txt"
         
-        output_file = f"{output_dir}/beta-eq-eos{i}.dat"
-        if os.path.exists(output_file):
-            os.remove(output_file)
+
         
         # Execute the external command
-        "./beta-eq"
+        "./beta"
         
         # Append the contents of fort.7 to the output file
         with open("fort.7", "r") as fort_file, open(output_file, "a") as outfile:
@@ -38,3 +38,4 @@ def do_eos_delta():
             os.remove(temp_input_file)
 
 do_eos_delta()
+

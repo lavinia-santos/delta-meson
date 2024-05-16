@@ -16,13 +16,13 @@ def do_eos_delta():
     for i in range(1, num_lines + 1):
         # Write the i-th line to the temporary input file
         with open(temp_input_file, "w") as tempfile:
-            for line in infile:
+            for line in lines:
                 tempfile.write(line.strip()+"\n")
         
         #print(i)
         with open(temp_input_file, "r") as tempfile:
             #its not necessary to remove the old files because it overwrites them
-            output_file = f"{output_dir}/beta-eq-eos{i}.dat"
+            output_file = f"{output_dir}/beta-eq-eos{i}.txt"
         
 
         

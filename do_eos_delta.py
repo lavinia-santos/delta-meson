@@ -22,14 +22,13 @@ def do_eos_delta():
         with open(temp_input_file, "r") as tempfile:
             print(tempfile.read())
         
-        with open(output_file, "w") as outfile:
-            outfile.write(lines[i - 1])
-        # output_file = f"{output_dir}/beta-eq-eos{i}`.dat"
+        output_file = f"{output_dir}/beta-eq-eos{i}.dat"
+        
         # if os.path.exists(output_file):
         #     os.remove(output_file)
         
         # Execute the external command
-        "./beta-eq"
+        "./beta"
         
         # Append the contents of fort.7 to the output file
         with open("fort.7", "r") as fort_file, open(output_file, "a") as outfile:

@@ -1,4 +1,4 @@
-
+import subprocess
 def do_tov_delta():
     input_dir = "beta-outputs/with-crust"
     output_dir = "tov-outputs"
@@ -17,9 +17,10 @@ def do_tov_delta():
         with open(temp_input_file, "a") as tempfile:
             tempfile.write("\n" + "-1. -1. -1.")
 
-        "./tov"
+        result = subprocess.run("./tov", shell=True)
+        result
 
-        with open("tov.dat", "r") as tov_file, open(output_file, "a") as outfile:
+        with open("tov.out", "r") as tov_file, open(output_file, "a") as outfile:
             outfile.write(tov_file.read())
         
         with open(temp_input_file, "r") as tempfile:

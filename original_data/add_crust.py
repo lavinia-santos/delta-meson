@@ -1,11 +1,14 @@
+
+
+
 def add_crust():
     num_lines= 5
     core_dir = "beta-outputs/"
     output_dir = "beta-outputs/with-crust"
 
     for i in range(1, num_lines + 1):
-        core_file_path = f"{core_dir}beta-eq-eos{i}.dat"
-        output_file = f"{output_dir}/beta-crust{i}.dat"
+        core_file_path = f"{core_dir}beta-eq-eos{i}.txt"
+        output_file = f"{output_dir}/beta-crust{i}.txt"
     
         with open(output_file, "w"):
             pass
@@ -16,3 +19,5 @@ def add_crust():
             outfile.write(core_file.read())
 
 add_crust()
+
+    

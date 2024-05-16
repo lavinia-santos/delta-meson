@@ -1,8 +1,8 @@
-import os, subprocess
+import os
 
 def do_eos_delta():
     input_file = "delta_sorted.dat"
-    output_dir = "/beta-outputs"
+    output_dir = "beta-outputs"
     temp_input_file = "delta.inp"
     
     #beta=r"C:/Users/lavin/OneDrive/Desktop/Lavinia/UT3/M1/Stage/delta-meson/original_data/beta-eq"
@@ -16,13 +16,13 @@ def do_eos_delta():
     for i in range(1, num_lines + 1):
         # Write the i-th line to the temporary input file
         with open(temp_input_file, "w") as tempfile:
-            tempfile.write(lines[i - 1])
+            for line in infile:
+                tempfile.write(line.strip()+"\n")
         
-        print(i)
+        #print(i)
         with open(temp_input_file, "r") as tempfile:
-            print(tempfile.read())
-        
-        output_file = f"{output_dir}/beta-eq-eos{i}.dat"
+            #print(tempfile.read())
+            output_file = f"{output_dir}/beta-eq-eos{i}.dat"
         
         # if os.path.exists(output_file):
         #     os.remove(output_file)

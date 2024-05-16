@@ -2,7 +2,7 @@ import os, subprocess
 
 def do_eos_delta():
     input_file = "delta_sorted.dat"
-    output_dir = "/beta-outputs"
+    output_dir = "beta-outputs"
     temp_input_file = "delta.inp"
     
     #beta=r"C:/Users/lavin/OneDrive/Desktop/Lavinia/UT3/M1/Stage/delta-meson/original_data/beta-eq"
@@ -22,7 +22,7 @@ def do_eos_delta():
         with open(temp_input_file, "r") as tempfile:
             print(tempfile.read())
         
-        output_file = f"{output_dir}/beta-eq-eos{i}`.dat"
+        output_file = f"{output_dir}/beta-eq-eos{i}.dat"
         if os.path.exists(output_file):
             os.remove(output_file)
         

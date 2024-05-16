@@ -21,11 +21,10 @@ def do_eos_delta():
         
         #print(i)
         with open(temp_input_file, "r") as tempfile:
-            #print(tempfile.read())
+            #its not necessary to remove the old files because it overwrites them
             output_file = f"{output_dir}/beta-eq-eos{i}.dat"
         
-        # if os.path.exists(output_file):
-        #     os.remove(output_file)
+
         
         # Execute the external command
         "./beta"

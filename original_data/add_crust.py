@@ -17,7 +17,7 @@ def add_crust():
         with open (core_old_file_path, "r") as core_old_file, open(core_new_file_path, "w") as core_new_file:
             for line in core_old_file:
                 if line.strip():
-                    core_new_file.write("\t".join(line.split()[:3]) + "\n")
+                    core_new_file.write("  ".join(line.split()[:3]) + "\n")
 
     
         # with open(output_file, "w"):

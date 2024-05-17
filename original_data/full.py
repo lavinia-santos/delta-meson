@@ -2,7 +2,7 @@ import os, subprocess
 import matplotlib.pyplot as plt
 import pandas as pd
 
-num_lines = 5
+num_lines = 10
 
 def do_eos_delta():
     input_file = "delta_sorted.dat"
@@ -50,7 +50,7 @@ def add_crust():
         with open (core_old_file_path, "r") as core_old_file, open(core_new_file_path, "w") as core_new_file:
             for line in core_old_file:
                 if line.strip():
-                    core_new_file.write("\t".join(line.split()[:3]) + "\n")
+                    core_new_file.write("  ".join(line.split()[:3]) + "\n")
 
     
         # with open(output_file, "w"):
@@ -102,14 +102,37 @@ def plot_mass_radius():
         #needs to convert df to numpy because pandas and matplotlib doesn't get along with well
         xi=df['R'].to_numpy()
         yi=df['M'].to_numpy()
-        plt.plot(xi, yi, label=f'file {i}')
+        plt.plot(xi, yi)
     plt.legend()
     plt.show()
-
+def plot_pressure_vs_energy_density():
+    input_dir = "beta-outputs/with-crust"
+    for i in range (1, num_lines + 1):
+        fm4_file = f"{input_dir}/beta-crust{i}.txt"
+        input_file = f"{input_dir}/beta-crust-Mevfm3-{i}.txt"
+        with open(fm4_file, "r") as prevfile, open(input_file, "w") as infile:
+            infile.write(prevfile.read())
+        df = pd.read_csv(input_file, sep="  ", header=None, on_bad_lines='skip')
+        print(df)
+        df = df.rename(columns={df.columns[0]: 'density', df.columns[1]: 'energy', df.columns[2]: 'pressure'})
+        df=df.mul({'density':1, 'energy': 197.26, 'pressure': 197.26})
+        # df.columns[1] = df.columns[1]*197.26
+        # df.columns[2] = df.columns[2]*197.26
+        #print (df)
+        xi=[]
+        yi=[]
+        #needs to convert df to numpy because pandas and matplotlib doesn't get along with well
+        xi=df['energy'].to_numpy()
+        yi=df['pressure'].to_numpy()
+        plt.yscale("log")
+        plt.plot(xi, yi)
+    plt.legend()
+    plt.show()
 def main():
     do_eos_delta()
     add_crust()
     do_tov_delta()
-    plot_mass_radius() 
+    plot_pressure_vs_energy_density()
+
 
 main()

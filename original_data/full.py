@@ -2,7 +2,7 @@ import os, subprocess
 import matplotlib.pyplot as plt
 import pandas as pd
 
-num_lines = 10
+num_lines = 4
 
 def do_eos_delta():
     input_file = "delta_sorted.dat"
@@ -128,11 +128,33 @@ def plot_pressure_vs_energy_density():
         plt.plot(xi, yi)
     plt.legend()
     plt.show()
+def plot_energy_vs_density():
+    input_dir = "beta-outputs/with-crust"
+    for i in range (1, num_lines + 1):
+        fm4_file = f"{input_dir}/beta-crust{i}.txt"
+        input_file = f"{input_dir}/beta-crust-Mevfm3-{i}.txt"
+        with open(fm4_file, "r") as prevfile, open(input_file, "w") as infile:
+            infile.write(prevfile.read())
+        df = pd.read_csv(input_file, sep="  ", header=None, on_bad_lines='skip')
+        df = df.rename(columns={df.columns[0]: 'density', df.columns[1]: 'energy', df.columns[2]: 'pressure'})
+        col = ['energy']
+        df[col] = df[col].mul(df['density'], axis=0)
+        xi=[]
+        yi=[]
+        #needs to convert df to numpy because pandas and matplotlib doesn't get along with well
+        xi=df['density'].to_numpy()
+        yi=df['energy'].to_numpy()
+        plt.plot(xi, yi, label=f"file{i}")
+    plt.legend()
+    plt.show()
+    
 def main():
     do_eos_delta()
     add_crust()
     do_tov_delta()
-    plot_pressure_vs_energy_density()
+    plot_energy_vs_density()
+    #try to make subplots? Idk if it's necessary
+
 
 
 main()

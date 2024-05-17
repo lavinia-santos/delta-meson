@@ -6,7 +6,7 @@ def do_eos_delta():
     output_dir = "beta-outputs"
     temp_input_file = "delta.inp"
     
-    num_lines = 5
+    num_lines = 10
 
     # Open the input file
     with open(input_file, "r") as infile:

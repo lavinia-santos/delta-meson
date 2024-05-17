@@ -3,7 +3,7 @@ def do_tov_delta():
     input_dir = "beta-outputs/with-crust"
     output_dir = "tov-outputs"
     temp_input_file = "tov.dat"
-    num_lines = 5
+    num_lines = 10
 
     for i in range(1, num_lines + 1):
         input_file = f"{input_dir}/beta-crust{i}.txt"
@@ -14,7 +14,7 @@ def do_tov_delta():
         with open(input_file, "r") as infile, open(temp_input_file, "a") as tempfile:   
             tempfile.write(infile.read())
         
-        print(tempfile)
+        #print(tempfile)
         
         with open(temp_input_file, "a") as tempfile:
             tempfile.write("-1. -1. -1.")

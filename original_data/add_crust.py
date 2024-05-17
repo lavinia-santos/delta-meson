@@ -2,7 +2,7 @@
 
 
 def add_crust():
-    num_lines= 5
+    num_lines= 10
     core_dir = "beta-outputs/"
     output_dir = "beta-outputs/with-crust"
 

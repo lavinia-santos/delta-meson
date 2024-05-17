@@ -2,7 +2,7 @@
 
 
 def add_crust():
-    num_lines= 5
+    num_lines= 10
     core_dir = "beta-outputs/"
     output_dir = "beta-outputs/with-crust"
 
@@ -20,9 +20,9 @@ def add_crust():
                     core_new_file.write("\t".join(line.split()[:3]) + "\n")
 
     
-        with open(output_file, "w"):
-            pass
-        with open("bps_nl3wr_crust.dat", "r") as crust, open(output_file, "a") as outfile:
+        # with open(output_file, "w"):
+        #     pass
+        with open("bps_nl3wr_crust.dat", "r") as crust, open(output_file, "w") as outfile:
             outfile.write(crust.read())
    
         with open(core_new_file_path, "r") as core_file, open(output_file, "a") as outfile:

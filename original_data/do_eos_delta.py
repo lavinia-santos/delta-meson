@@ -6,13 +6,9 @@ def do_eos_delta():
     output_dir = "beta-outputs"
     temp_input_file = "delta.inp"
     
-    #beta=r"C:/Users/lavin/OneDrive/Desktop/Lavinia/UT3/M1/Stage/delta-meson/original_data/beta-eq"
-    beta=r"C:/Users/lavin/OneDrive/Desktop/Lavinia/UT3/M1/Stage/delta-meson/original_data/beta-eq"
     num_lines = 5
 
     # Open the input file
-
-    #POSSIBLE PROBLEM WITH FOR
     with open(input_file, "r") as infile:
         lines = infile.readlines()
     
@@ -20,29 +16,23 @@ def do_eos_delta():
        with open(temp_input_file, "w") as tempfile:
         pass
        
-       for line in lines:
-            with open(temp_input_file, "w") as tempfile:
-                tempfile.write(line.strip()+"\n")
+    
+        with open(temp_input_file, "w") as tempfile:
+            tempfile.write(lines[i].strip()+"\n")
         
         #print(i)
-            with open(temp_input_file, "r") as tempfile:
-                   #its not necessary to remove the old files because it overwrites them
-                output_file = f"{output_dir}/beta-eq-eos{i}.txt"
+        #with open(temp_input_file, "r") as tempfile:
+        #its not necessary to remove the old files because it overwrites them (w)
+        output_file = f"{output_dir}/beta-eq-eos{i}.txt"
+        # Execute the external command
+        result = subprocess.run("./beta-eq", shell=True)
+            #result
+            # Write (overwrite!) the contents of fort.7 to the output file
+        with open("fort.7", "r") as fort_file, open(output_file, "w") as outfile:
+            outfile.write(fort_file.read())
                 
-
-                
-                # Execute the external command
-
-            result = subprocess.run("./beta-eq", shell=True)
-            result
-
-                
-                # Append the contents of fort.7 to the output file
-            with open("fort.7", "r") as fort_file, open(output_file, "a") as outfile:
-                outfile.write(fort_file.read())
-                
-                # Remove the temporary input file
-            if os.path.exists(temp_input_file):
-                os.remove(temp_input_file)
+        # Remove the temporary input file
+        if os.path.exists(temp_input_file):
+            os.remove(temp_input_file)
 
 do_eos_delta()

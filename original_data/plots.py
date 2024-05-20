@@ -30,26 +30,43 @@ def plot_mass_radius():
 
 def plot_pressure_vs_energy_density():
     input_dir = "beta-outputs/with-crust"
-    num_lines = 2
+    num_lines = 10
     for i in range (1, num_lines + 1):
         fm4_file = f"{input_dir}/beta-crust{i}.txt"
         input_file = f"{input_dir}/beta-crust-Mevfm3-{i}.txt"
         with open(fm4_file, "r") as prevfile, open(input_file, "w") as infile:
             infile.write(prevfile.read())
         df = pd.read_csv(input_file, sep="  ", header=None, on_bad_lines='skip')
-        print(df)
         df = df.rename(columns={df.columns[0]: 'density', df.columns[1]: 'energy', df.columns[2]: 'pressure'})
+        #print(df)
         df = df.mul({'density':1, 'energy': 197.26, 'pressure': 197.26})
         # df.columns[1] = df.columns[1]*197.26
         # df.columns[2] = df.columns[2]*197.26
-        print (df)
+        #print (df)
         xi=[]
         yi=[]
         #needs to convert df to numpy because pandas and matplotlib doesn't get along with well
         xi=df['energy'].to_numpy()
         yi=df['pressure'].to_numpy()
         plt.yscale("log")
-        plt.plot(xi, yi)
+        plt.plot(xi, yi, color="red")
+
+        old_file = f"beta-eq-eos18.txt"
+        new_file = f"beta-eq-eos18-new.dat"
+        with open(old_file, "r") as prevfile, open(new_file, "w") as infile:
+            infile.write(prevfile.read())
+
+    df_nodelta=pd.read_csv(new_file, sep="  ", header=None, on_bad_lines='skip')
+    print(df_nodelta)
+    df_nodelta = df_nodelta.rename(columns={df_nodelta.columns[0]: 'density', df_nodelta.columns[1]: 'energy', df_nodelta.columns[2]: 'pressure'})
+    #print(df_nodelta)
+    df_nodelta = df_nodelta.mul({'density':1, 'energy': 197.26, 'pressure': 197.26})
+    xi_nodelta=[]
+    yi_nodelta=[]
+    xi_nodelta=df_nodelta['energy'].to_numpy()
+    yi_nodelta=df_nodelta['pressure'].to_numpy()
+    plt.yscale("log")
+    plt.plot(xi_nodelta, yi_nodelta, color="blue", linestyle='dashed')
     plt.legend()
     plt.show()
 
@@ -98,3 +115,4 @@ def plot_L_density():
     plt.legend()
     plt.show()
 
+plot_pressure_vs_energy_density()

@@ -2,7 +2,7 @@ import os, subprocess
 import matplotlib.pyplot as plt
 import pandas as pd
 
-num_lines = 4
+num_lines = 50
 
 def do_eos_delta():
     input_file = "delta_sorted.dat"

@@ -75,4 +75,26 @@ def plot_energy_vs_density():
     plt.legend()
     plt.show()
 
-plot_mass_radius()
+def plot_L_density():
+    input_dir = "properties-outputs"
+    num_lines = 50
+    for i in range (1, num_lines + 1):
+        input_file = f"{input_dir}/props.txt"
+        df = pd.read_csv(input_file, sep=" ", header=None, on_bad_lines='skip')
+        #print(df)
+        df = df.rename(columns={df.columns[0]: 'id', df.columns[1]: 'r0', df.columns[2]: 'EB', df.columns[3]: 'E_dens', df.columns[4]: 'p', df.columns[5]: 'K0', df.columns[6]: 'Q0', df.columns[7]: 'Esym', df.columns[8]: 'L', df.columns[9]: 'Ksym', df.columns[10]: 'Qsym'})
+        xi=[]
+        yi=[]
+        #needs to convert df to numpy because pandas and matplotlib doesn't get along with well
+        xi=df['r0'].to_numpy()
+        yi=df['Esym'].to_numpy()
+        plt.plot(xi, yi, color="red")
+        # df_nodelta=pd.read_csv("NM_properties18.dat", sep=" ", header=None, on_bad_lines='skip')
+        # print(df_nodelta)
+        # df_nodelta = df_nodelta.rename(columns={df.columns[0]: 'id', df_nodelta.columns[1]: 'r0', df_nodelta.columns[2]: 'EB', df_nodelta.columns[3]: 'K0', df_nodelta.columns[4]: 'Q0', df_nodelta.columns[5]: 'Esym', df_nodelta.columns[6]: 'L', df_nodelta.columns[7]: 'Ksym', df_nodelta.columns[8]: 'Qsym'})
+        # xi_nodelta=df_nodelta['r0'].to_numpy()
+        # yi_nodelta=df_nodelta['L'].to_numpy()
+        # plt.plot(xi_nodelta, yi_nodelta, color="blue", linestyle='dashed')
+    plt.legend()
+    plt.show()
+

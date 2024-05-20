@@ -4,6 +4,7 @@ import pandas as pd
 
 #### Plots
 
+#we need the MR, energy_density_vs_density and corner plots of the properties!!
 
 
 def plot_mass_radius():

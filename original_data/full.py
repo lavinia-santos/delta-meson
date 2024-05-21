@@ -2,18 +2,18 @@ import os, subprocess
 import matplotlib.pyplot as plt
 import pandas as pd
 
-num_lines = 50
+num_lines = 7734
 
 def do_eos_delta():
-    input_file = "delta_sorted.dat"
+    input_file = "delta.dat"
     output_dir = "beta-outputs"
     temp_input_file = "delta.inp"
-
+    
     # Open the input file
     with open(input_file, "r") as infile:
         lines = infile.readlines()
     
-    for i in range(1, num_lines + 1):
+    for i in range(0 , num_lines):
        with open(temp_input_file, "w") as tempfile:
         pass
        
@@ -24,7 +24,7 @@ def do_eos_delta():
         #print(i)
         #with open(temp_input_file, "r") as tempfile:
         #its not necessary to remove the old files because it overwrites them (w)
-        output_file = f"{output_dir}/beta-eq-eos{i}.txt"
+        output_file = f"{output_dir}/beta-eq-eos{i+1}.txt"
         # Execute the external command
         result = subprocess.run("./beta-eq", shell=True)
             #result
@@ -39,10 +39,10 @@ def add_crust():
     core_dir = "beta-outputs/"
     output_dir = "beta-outputs/with-crust"
 
-    for i in range(1, num_lines + 1):
-        core_old_file_path = f"{core_dir}beta-eq-eos{i}.txt"
-        core_new_file_path = f"{core_dir}beta-eq-eos-new{i}.txt"
-        output_file = f"{output_dir}/beta-crust{i}.txt"
+    for i in range(0, num_lines):
+        core_old_file_path = f"{core_dir}beta-eq-eos{i+1}.txt"
+        core_new_file_path = f"{core_dir}beta-eq-eos-new{i+1}.txt"
+        output_file = f"{output_dir}/beta-crust{i+1}.txt"
         
         with open (core_new_file_path, "w"):
             pass
@@ -64,11 +64,10 @@ def do_tov_delta():
     input_dir = "beta-outputs/with-crust"
     output_dir = "tov-outputs"
     temp_input_file = "tov.dat"
-    
 
-    for i in range(1, num_lines + 1):
-        input_file = f"{input_dir}/beta-crust{i}.txt"
-        output_file = f"{output_dir}/tov{i}.txt"
+    for i in range(0, num_lines):
+        input_file = f"{input_dir}/beta-crust{i+1}.txt"
+        output_file = f"{output_dir}/tov{i+1}.txt"
     
         with open(output_file, "w"), open(temp_input_file, "w"):
             pass
@@ -87,20 +86,26 @@ def do_tov_delta():
         with open("tov.out", "r") as tov_file, open(output_file, "w") as outfile:
             outfile.write(tov_file.read())
         
-        with open(temp_input_file, "r") as tempfile:
-            pass
-        print(f"tov {i} done")
+        print(f"tov {i+1} done")
+        
+        # with open(temp_input_file, "w") as tempfile:
+        #     pass
 def do_properties_delta():
-    input_file = "delta_sorted.dat"
+    input_file = "delta.dat"
     output_dir = "properties-outputs"
     temp_input_file = "delta.inp"
     
+    num_lines = 2
 
     # Open the input file
     with open(input_file, "r") as infile:
         lines = infile.readlines()
     
-    for i in range(1, num_lines + 1):
+    output_file = f"{output_dir}/props.txt"
+    with open(output_file, "w"):
+        pass
+    
+    for i in range(0, num_lines):
        with open(temp_input_file, "w") as tempfile:
         pass
        
@@ -111,13 +116,13 @@ def do_properties_delta():
         #print(i)
         #with open(temp_input_file, "r") as tempfile:
         #its not necessary to remove the old files because it overwrites them (w)
-        output_file = f"{output_dir}/prop{i}.txt"
+        
         # Execute the external command
         result = subprocess.run("./properties", shell=True)
             #result
             # Write (overwrite!) the contents of fort.7 to the output file
-        with open("fort.60", "r") as fort_file, open(output_file, "w") as outfile:
-            outfile.write(fort_file.read())
+        with open("fort.60", "r") as fort_file, open(output_file, "a") as outfile:
+            outfile.write(f"{i+1}"+fort_file.read() + '\n')
                 
         # Remove the temporary input file
         if os.path.exists(temp_input_file):
@@ -160,7 +165,7 @@ def plot_pressure_vs_energy_density():
         plt.plot(xi, yi)
     plt.legend()
     plt.show()
-def plot_energy_vs_density():
+#def plot_energy_vs_density():
     input_dir = "beta-outputs/with-crust"
     for i in range (1, num_lines + 1):
         fm4_file = f"{input_dir}/beta-crust{i}.txt"

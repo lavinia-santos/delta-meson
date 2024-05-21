@@ -1,11 +1,11 @@
 import os, subprocess
 
 def do_properties_delta():
-    input_file = "delta_sorted.dat"
+    input_file = "delta.dat"
     output_dir = "properties-outputs"
     temp_input_file = "delta.inp"
     
-    num_lines = 50
+    num_lines = 7734
 
     # Open the input file
     with open(input_file, "r") as infile:
@@ -15,7 +15,7 @@ def do_properties_delta():
     with open(output_file, "w"):
         pass
     
-    for i in range(1, num_lines + 1):
+    for i in range(0, num_lines):
        with open(temp_input_file, "w") as tempfile:
         pass
        
@@ -32,10 +32,12 @@ def do_properties_delta():
             #result
             # Write (overwrite!) the contents of fort.7 to the output file
         with open("fort.60", "r") as fort_file, open(output_file, "a") as outfile:
-            outfile.write(fort_file.read() + '\n')
+            outfile.write(f"{i+1}"+fort_file.read() + '\n')
                 
         # Remove the temporary input file
         if os.path.exists(temp_input_file):
             os.remove(temp_input_file)
+        
+        print(f"properties {i+1} done")
 
 do_properties_delta()

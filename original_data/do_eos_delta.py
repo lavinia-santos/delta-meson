@@ -1,18 +1,17 @@
- #!/usr/bin/python3
 import os, subprocess
 
 def do_eos_delta():
-    input_file = "delta_sorted.dat"
+    input_file = "delta.dat"
     output_dir = "beta-outputs"
     temp_input_file = "delta.inp"
     
-    num_lines = 10
+    num_lines = 2
 
     # Open the input file
     with open(input_file, "r") as infile:
         lines = infile.readlines()
     
-    for i in range(1, num_lines + 1):
+    for i in range(0 , num_lines):
        with open(temp_input_file, "w") as tempfile:
         pass
        
@@ -23,7 +22,7 @@ def do_eos_delta():
         #print(i)
         #with open(temp_input_file, "r") as tempfile:
         #its not necessary to remove the old files because it overwrites them (w)
-        output_file = f"{output_dir}/beta-eq-eos{i}.txt"
+        output_file = f"{output_dir}/beta-eq-eos{i+1}.txt"
         # Execute the external command
         result = subprocess.run("./beta-eq", shell=True)
             #result

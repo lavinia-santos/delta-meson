@@ -2,14 +2,14 @@
 
 
 def add_crust():
-    num_lines= 10
+    num_lines= 2
     core_dir = "beta-outputs/"
     output_dir = "beta-outputs/with-crust"
 
-    for i in range(1, num_lines + 1):
-        core_old_file_path = f"{core_dir}beta-eq-eos{i}.txt"
-        core_new_file_path = f"{core_dir}beta-eq-eos-new{i}.txt"
-        output_file = f"{output_dir}/beta-crust{i}.txt"
+    for i in range(0, num_lines):
+        core_old_file_path = f"{core_dir}beta-eq-eos{i+1}.txt"
+        core_new_file_path = f"{core_dir}beta-eq-eos-new{i+1}.txt"
+        output_file = f"{output_dir}/beta-crust{i+1}.txt"
         
         with open (core_new_file_path, "w"):
             pass

@@ -181,12 +181,12 @@ def plot_pressure_vs_energy_density():
 
     
 def main():
-    do_properties_delta()
+    #do_properties_delta()
     do_eos_delta()
-    add_crust()
-    do_tov_delta()
-    plot_mass_radius()
+    # add_crust()
+    # do_tov_delta()
+    # plot_mass_radius()
     #check on corner plots
 
-#main()
-plot_pressure_vs_energy_density()
+main()
+#plot_pressure_vs_energy_density()

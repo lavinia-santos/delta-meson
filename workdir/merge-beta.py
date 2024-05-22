@@ -1,5 +1,7 @@
+num_lines= 3
+
+
 def merge_beta_delta():
-    num_lines= 7734
     core_dir = "beta-outputs/"
     #output_dir = "beta-outputs/with-crust"
     output_file = "beta-data.txt"
@@ -17,7 +19,6 @@ def merge_beta_delta():
         print(f"beta {i+1} done")
 
 def merge_tov_delta():
-    num_lines= 6350
     core_dir = "tov-outputs/"
     #output_dir = "beta-outputs/with-crust"
     output_file = "tov-data.txt"

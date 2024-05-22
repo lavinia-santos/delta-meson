@@ -2,7 +2,7 @@ import os, subprocess
 import matplotlib.pyplot as plt
 import pandas as pd
 
-num_lines = 5
+num_lines = 3
 
 def do_eos_delta():
     input_file = "delta.dat"
@@ -109,34 +109,36 @@ def do_properties_delta():
 
         #Write (overwrite!) the contents of fort.60 to the output file
         with open("fort.60", "r") as fort_file, open(output_file, "a") as outfile:
-            outfile.write(f"{i+1}"+fort_file.read() + '\n')
+            for line in fort_file:
+                #outfile.write(f"{i+1}")
             #### test carefully #####
-            # if lines.strip():
-            #     columns = lines.split()
-            #     del columns[1]
-            #     for i in range(len(columns)):
-            #         outfile.write( columns[i] + " ")
-            #     outfile.write("\n")
+                if line.strip():
+                    columns = line.split()
+                    del columns[0]
+                    outfile.write(f"{i+1}")
+                    for j in range(len(columns)):
+                        outfile.write(" " + columns[j] + " ")
+                    outfile.write("\n")
             ####### otherwise use the fix_values() function #####
         # Remove the temporary input file
         if os.path.exists(temp_input_file):
             os.remove(temp_input_file)
 
-###### uncomment if the util inside the function is not working ######
-# def fix_columns():
-#     input_file = "properties-outputs/props.txt"
-#     output_file = "properties-outputs/props_1.txt"
+##### use this if the util inside the function is not working ######
+def fix_columns():
+    input_file = "properties-outputs/props.txt"
+    output_file = "properties-outputs/props_1.txt"
     
-#     with open(input_file, "r") as infile, open(output_file, "w") as outfile:
-#         for line in infile:
+    with open(input_file, "r") as infile, open(output_file, "w") as outfile:
+        for line in infile:
             
-#             if line.strip():
-#                 columns = line.split()
-#                 del columns[1]
-#                 for i in range(len(columns)):
-#                     outfile.write( columns[i] + " ")
-#                 outfile.write("\n")
-######################################################################             
+            if line.strip():
+                columns = line.split()
+                del columns[1]
+                for i in range(len(columns)):
+                    outfile.write( columns[i] + " ")
+                outfile.write("\n")
+#####################################################################             
 
 
 def plot_mass_radius():
@@ -186,5 +188,5 @@ def main():
     plot_mass_radius()
     #check on corner plots
 
-
-main()
+#main()
+plot_pressure_vs_energy_density()

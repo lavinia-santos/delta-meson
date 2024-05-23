@@ -6,56 +6,90 @@ def quartile():
     #get mass values from the tov output file
     #for now, we use a dummy array
     #mass_raw=[5,7,15,22,45]
+
+    # Calcule os quantis
+    quantis=0.1
+    quantiles = np.arange(quantis, 1 + quantis, quantis)
+    #quantile_values = [np.quantile(lst, q) for q in quantiles]
+
+    # Encontre os valores correspondentes aos quantis na lista original
+    #lst_result = [min(lst, key=lambda x: abs(x - qv)) for qv in quantile_values]
+
     input_file = "tov-data-ex.txt" #R: col3, M: col2
-    num_curves = 3
+    num_curves = 5
+    intervals=[0, 0.2, 0.4, 0.6, 0.8, 1.0]
 
-    mass=[]
+    masses_raw=[]
     radius={}
-    # with open(input_file, "r") as infile:
-    #     for line in infile:
-    #         columns = line.split()
-    #         #print(columns)
-    #         mass.append(columns[2])
-    #     #print(mass)
-    #         temp=[]
-    #         for i in range(1,num_curves+1):
-    #             print(f"i:{i}")
-    #             print(f"columns[0]:{columns[0]}")
-    #             if int(columns[0]) == i and int(columns[0]) not in radius.keys():
-    #                 # print(radius.keys())
-    #                 print(f"in if loop columns[0] (col):{columns[0]}")
+    mvsr = {}
+    masses=[]
+    
+    #print(input_file)
+    with open(input_file, "r") as infile:
+        for line in infile:
+            columns = line.split()
+            #print(columns)
+            masses_raw.append(float(columns[2]))
+            quantile_values = [np.quantile(masses_raw, q) for q in quantiles]
+        for i in intervals:
+            #print(i)
+            masses = [min(masses_raw, key=lambda x: abs(x - qv)) for qv in quantile_values]
+            #masses.append(np.quantile(masses_raw, i))
+        print(f"masses_raw:{masses_raw}")
+        print(f"q_mass:{masses}")   
+        for line in infile:
+            for i in range(1,num_curves+1):
+                # print(f"i:{i}")
+                # print(f"columns[0]:{columns[0]}")
+                if int(columns[0]) == i and int(columns[0]) not in radius.keys():
+                    # print(radius.keys())
+                    # print(f"in if loop columns[0] (col):{columns[0]}")
                     
-    #                 #temp = float(columns[3])
-    #                 # print(temp)
-    #                 radius[i] = []
-    #                 radius[i].append(float(columns[3]))
-    #                 #print(radius)
-    #                 print(f"radius[{i}] if:{radius[i]}")
+                    #temp = float(columns[3])
+                    # print(temp)
+                    radius[i] = []
+                    radius[i].append(float(columns[3]))
+                    #print(radius)
+                    # print(f"radius[{i}] if:{radius[i]}")
 
-    #             elif int(columns[0]) == i and int(columns[0]) in radius.keys():
-    #                 print(f"in else loop columns[0] (col):{columns[0]}")
-    #                 #temp.append(columns[3])
-    #                 #print(temp)
-    #                 radius[i].append(float(columns[3]))
-    #                 print(f"radius[{i}] elif:{radius[i]}")
-    #     print(radius)
-    #     # print(f"radius:{radius.values()}")
+                elif int(columns[0]) == i and int(columns[0]) in radius.keys():
+                    #print(f"in else loop columns[0] (col):{columns[0]}")
+                    #temp.append(columns[3])
+                    #print(temp)
+                    radius[i].append(float(columns[3]))
+                    #print(f"radius[{i}] elif:{radius[i]}")
+            for mass in masses_raw:
+                # print(f"mass:{mass}")
+                # print(f"columns[2]:{columns[2]}")
+                if float(columns[2]) == mass:
+                    # print(f"mass {columns[0]}:{mass}")
+                    # print(f"radius {columns[0]}:{columns[3]}")
+                    if columns[2] not in mvsr.keys():
+                        mvsr[mass] = []
+                        mvsr[mass].append(columns[3])
+                    else:
+                        mvsr[mass].append(columns[3])
+    # print(radius)
+    # print(masses)
+    print(f"mvsr:{mvsr}")
+
+        # print(f"radius:{radius.values()}")
 
 
-# make up some data
+# # make up some data
 
-# interpreting x value based on y value
-x=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-y=np.sin(x)
-y_val = 0.1
-x_interp = round(np.interp(y_val, y, x), 4)  # x_interp = np.interp(y_vals, y, x)
+# # interpreting x value based on y value
+# x=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+# y=np.sin(x)
+# y_val = 0.1
+# x_interp = round(np.interp(y_val, y, x), 4)  # x_interp = np.interp(y_vals, y, x)
 
-print(f"x_interp:{x_interp}")
+# print(f"x_interp:{x_interp}")
 
-# place a marker on point (x_interp, y_val)
-plt.plot(x, y, '-', color='k')
-plt.plot(x_interp, y_val, 'ro')
-plt.show()
+# # place a marker on point (x_interp, y_val)
+# plt.plot(x, y, '-', color='k')
+# plt.plot(x_interp, y_val, 'ro')
+# plt.show()
                 
             
 

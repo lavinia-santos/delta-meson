@@ -2,8 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 ############################################
-#The main code works but it takes a long time to run
-#The code is not optimized
+#2nd try
 #############################################
 
 def quartile():

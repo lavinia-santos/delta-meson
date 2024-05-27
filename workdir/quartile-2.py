@@ -1,15 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 ############################################
 #2nd try
+#Let's try with matrices instead of lists
 #############################################
 
 def quartile():
-    #get mass values from the tov output file
-    #for now, we use a dummy array
-    #mass_raw=[5,7,15,22,45]
-
     # Calcule os quantis
     quantis=0.1
     quantiles = np.arange(quantis, 1 + quantis, quantis)
@@ -19,127 +17,106 @@ def quartile():
     #lst_result = [min(lst, key=lambda x: abs(x - qv)) for qv in quantile_values]
 
     input_file = "tov-data-ex.txt" #R: col3, M: col2
-    num_curves = 250
-    intervals=np.linspace(0.6,1,50)
+    num_curves = 2
+    intervals=np.linspace(0,1,100)
 
     masses_raw=[]
-    radius={}
-    mvsr = {}
-    masses=[]
-    
-    #print(input_file)
-    with open(input_file, "r") as infile:
-        for line in infile:
-            columns = line.split()
-            print(f"starting first scan {columns[0]}th time")
-            
-            # print(line)
-            # print(f"starting first scan {columns[0]}th time")
-            
-            #print(columns)
-            masses_raw.append(float(columns[2]))
-            quantile_values = [np.quantile(masses_raw, q) for q in quantiles]
-            for i in intervals:
-                #print(i)
-                masses = [min(masses_raw, key=lambda x: abs(x - qv)) for qv in quantile_values]
-            #masses.append(np.quantile(masses_raw, i))
-        # print(f"masses_raw:{masses_raw}")
-            #print(f"q_mass:{masses}")   
-        #for line in infile:
-            #print(f"line:{line}")
-        # for line in infile:
-        #     #print(line)
-        #     columns = line.split()
-            
-            for i in range(1,num_curves+1):
-                #print(f"i:{i}")
-                # print(f"columns[0]:{columns[0]}")
-                if int(columns[0]) == i and int(columns[0]) not in radius.keys():
-                    # print(radius.keys())
-                    # print(f"in if loop columns[0] (col):{columns[0]}")
-                    radius[i] = []
-                    radius[i].append(float(columns[3]))
-                    # print(radius)
-                    # print(f"radius[{i}] if:{radius[i]}")
+    matrix=[]
+    full_matrix=[]
+    all_radius=[]
 
-                elif int(columns[0]) == i and int(columns[0]) in radius.keys():
-                    #print(f"in else loop columns[0] (col):{columns[0]}")
-                    #temp.append(columns[3])
-                    #print(temp)
-                    radius[i].append(float(columns[3]))
-                    #print(f"radius[{i}] elif:{radius[i]}")
-            
-            
-    
-        #print(f"masses:{masses}")
-    # with open(input_file, "r") as infile:
+    # radius={}
+    # mvsr = {}
+    # masses=[]
+ 
+    matrix = np.loadtxt(input_file, dtype=float)
+    for i in range(matrix.shape[0]):
+        print(f"{i} out of {matrix.shape[0]} done")
+        # curve_number=matrix[i][0]
+        # print(f"curve_number:{curve_number}")
+        mass=matrix[i][2]
+        radius=matrix[i][3]
         
-    #     for line in infile:
-        
-            #columns = line.split()
-            #print(f"columns:{columns}")
-            #print(f"masses after lines:{masses}")
-    print(f"masses before for:{masses}")
-    with open(input_file, "r") as infile:
-        for line in infile:
-            columns = line.split()
-            print(f"starting second scan {columns[0]}th time")
-            for mass in masses:
-                #print(f"masses:{masses}")
-                # print(f"mass:{mass}")
-                #print(f"mass before if loop:{mass}")
-                #print(f"columns[2]:{columns[2]}")
-                if float(columns[2]) == float(mass):
-                    print(f"mass :{mass}")
-                    print(f"columns[2]:{columns[2]}")
-                    if float(columns[2]) not in mvsr.keys():
-                        #print(f"mass {columns[0]}:{mass}")
-                        #print(f"mvsr.keys():{mvsr.keys()}")
-                        # print(f"radius {columns[0]}:{columns[3]}")
-                            #print(f"in if loop {columns[2]} (mass):{columns[2]}")
-                        mvsr[mass] = []
-                        mvsr[mass].append(columns[3])
-                    if float(columns[2]) in mvsr.keys():
-                    #print(f"in else loop columns[2] (mass):{columns[2]}")
-                        mvsr[mass].append(columns[3])
-        # print(f"{columns[0]}th scan done")
-        # for line in infile:
-        #     columns = line.split()
-            for key in mvsr:
-                mvsr[key] = [float(val) for val in mvsr[key]]
-       
-            
-    # print(f"radius:{radius}")
-    #print(f"masses:{masses}")
-   # for j in mvsr.items():
-    print(f"masses:{masses}")
-    #print(f"mvsr:{mvsr.keys()}")
-        #print(f"mvsr:{mvsr[j]}")
-    print(f"mvsr:{mvsr} ")
-    with open("mvsr.txt", "w") as outfile:
-        outfile.write(str(mvsr))
+        masses_raw.append(mass)
+        masses_raw=list(set(masses_raw))
+        masses_raw.sort()
+        # all_radius.append(radius)
+        # #all_radius=list(set(all_radius))
+        # all_radius.sort()
+        # print(f"all_radius:{all_radius}")
     
-    #mvsr: keys: mass, values: radius list corresponding to the mass
+    #input mass values to first row of full_matrix
+    quantile_values = [np.quantile(masses_raw, q) for q in quantiles]
+    for i in intervals:
+        #print(i)
+        masses = [min(masses_raw, key=lambda x: abs(x - qv)) for qv in quantile_values]
+    masses.append(float(np.quantile(masses_raw, i)))
+    masses=list(set(masses))
+    full_matrix.append(masses)
+    #print(f"full_matrix:{full_matrix}")
+    
 
-        # print(f"radius:{radius.values()}")
+    #####append test
+    # test1=[1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
+    # full_matrix.append(test1)
+    # print(f"full_matrix after append:\n{full_matrix}")
+    # full_matrix=np.array(full_matrix)
+    # print(f"full_matrix after array:\n{full_matrix}")
+    # full_matrix=np.transpose(full_matrix)
+    # print(f"full_matrix after transpose:\n{full_matrix}")
+    ####################
 
-    #the horizontal slice was set up
-    #now, let's calculate the quartiles
+
+
+
+
+    for mass in full_matrix[0][:]:
+        #print(f"mass:{mass}")
+        #column=0
+        print(f"mass {mass} done")
+
+        temp_row=[]
+
+        for i in range(matrix.shape[0]):
+            # print(f"matrix[i][2]:{matrix[i][2]}")
+            #print(f"mass:{mass}, temp_row:{temp_row} \n")
+
+            if float(mass) == float(matrix[i][2]):
+                temp_row.append(matrix[i][3])
+        temp_row.extend([0]*(len(full_matrix[0][:])-len(temp_row)))
+        full_matrix.append(temp_row)
+        #print(f"full_matrix after append:\n{full_matrix}")
+    #print(f"full_matrix after append out of for:\n{full_matrix}")
+    full_matrix=np.array(full_matrix)
+    print(f"full_matrix after array:\n{full_matrix}")
+
+
+#it was created a matrix in which first row is the mass values and the other rows are the radius values related to the mass values
+
+
+#     #the horizontal slice was set up
+#     #now, let's calculate the quartiles of the radius
 
 
     q1=[]
     q3=[]
-    #print(f"mvsr.values():{mvsr.values()}")
-    for arr in mvsr.values():
-        #print(f"arr:{arr} \n")
+    for arr in full_matrix[1:]:
+        print(f"arr:{arr}")
         # for i in range(len(arr)):
         #     print(f"i:{i}")
         #print(mvsr.items())
         #print(np.quantile(arr, 0.25))
-        q1.append(np.quantile(arr, 0.05))
-        q3.append(np.quantile(arr, 0.95))
+        q1.append(np.quantile(arr, 0.16))
+        q3.append(np.quantile(arr, 0.84))
     print(f"q1:{q1}")
     print(f"q3:{q3}")
+
+
+
+
+
+
+
     #q1 and q3 are radius values related to a given mass value
 
     #     q1.append(np.quantile(arr, 0.25))
@@ -153,9 +130,9 @@ def quartile():
     # print(f"q1:{q1}")
     # print(f"q3:{q3}")
 
-    plt.plot(q1, masses, 'r-')
-    plt.plot(q3, masses, 'b-')
-    plt.show()
+#     plt.plot(q1, masses, 'r-')
+#     plt.plot(q3, masses, 'b-')
+#     plt.show()
 
     
    

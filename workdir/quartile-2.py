@@ -54,7 +54,7 @@ def plot_mr_curve():
     labels = data[:, 0]
     masses = data[:, 2]
     radii = np.asfarray(data[:, 3])
-    print(f"labels:{labels}")
+    # print(f"labels:{labels}")
     # print(f"radii:{radii}")
     # print(f"masses:{masses}")
 
@@ -62,52 +62,79 @@ def plot_mr_curve():
     radii_filtered = radii[(radii >= 10) & (radii <= 15)]
     masses_filtered = masses[(radii >= 10) & (radii <= 15)]
     labels_filtered = labels[(radii >= 10) & (radii <= 15)]
+    radii_filtered = np.sort(radii_filtered)
+    #radii_filtered = np.unique(radii_filtered)
+    masses_filtered = np.sort(masses_filtered)
+    #masses_filtered = np.unique(masses_filtered)
     print(f"radii_filtered:{radii_filtered}, len:{len(radii_filtered)}")
     print(f"masses_filtered:{masses_filtered}, len:{len(masses_filtered)}")
-    print(f"labels_filtered:{labels_filtered}, len:{len(labels_filtered)}")
+    # print(f"labels_filtered:{labels_filtered}, len:{len(labels_filtered)}")
     #Find the indices of the minimal and maximal radii values
-    min_radius = np.min(radii_filtered)
-    max_radius = np.max(radii_filtered)
+    # min_radius = np.min(radii_filtered)
+    # max_radius = np.max(radii_filtered)
     # Get the masses and radii for the minimal and maximal curves
-    print(f"min_radius:{min_radius}")
-    print(f"max_radius:{max_radius}")
-    min_masses = masses_filtered[radii_filtered == min_radius]
-    max_masses = masses_filtered[radii_filtered == max_radius]
-    print(f"min_masses:{min_masses}")
-    print(f"max_masses:{max_masses}")
-    min_label = labels_filtered[radii_filtered == min_radius]
-    max_label = labels_filtered[radii_filtered == max_radius]
-    
-   
-    
-    print(f"min_label:{min_label}")
-    print(f"max_label:{max_label}")
-    
-    # Create empty lists for all masses and radii
-    all_masses = []
-    all_radii = []
-    unique_labels=[]
+    # print(f"min_radius:{min_radius}")
+    # print(f"max_radius:{max_radius}")
+    # min_masses = masses_filtered[radii_filtered == min_radius]
+    # max_masses = masses_filtered[radii_filtered == max_radius]
+    # print(f"min_masses:{min_masses}")
+    # print(f"max_masses:{max_masses}")
 
-    # Iterate over unique labels
-    unique_labels.append(min_label)
-    unique_labels.append(max_label)
-    print(f"unique_labels:{unique_labels}")
-    for label in unique_labels:
-        # Get masses and radii for current label
-        label_masses = masses_filtered[labels_filtered == label]
-        label_radii = radii_filtered[labels_filtered == label]
 
-        # Append masses and radii to the respective lists
-        all_masses.append(label_masses)
-        all_radii.append(label_radii)
-    print(f"all_masses:{all_masses}")
-    print(f"all_radii:{all_radii}")
 
-    for i in range(len(unique_labels)):
-        plt.plot(all_radii[i], all_masses[i], 'r-', label=unique_labels[i])
-
-    plt.legend()
+    #interpolation so we have masses for all radii values
+    mass_interp = np.interp(radii_filtered, radii_filtered, masses_filtered)
+    #mass_interp=np.unique(mass_interp)
+    print(f"mass_interp:{mass_interp}, len:{len(mass_interp)}")
+    #radii_filtered=np.unique(radii_filtered)
+    #mass_interp=np.unique(mass_interp)
+    plt.plot(radii_filtered, mass_interp, 'r-')
     plt.show()
+
+
+
+
+    # q1=[]
+    # q3=[]
+    
+    # q1.append(np.quantile(radii_filtered, 0.05))
+    # q3.append(np.quantile(radii_filtered, 0.95))
+    # q1=np.unique(q1)
+    # q3=np.unique(q3)
+    # print(f"q1:{q1}, len:{len(q1)}")
+    # print(f"q3:{q3}, len:{len(q3)}")
+    #print(f"(q1==q3).all():{(q1==q3).all()}")
+
+    # min_label = labels_filtered[radii_filtered == min_radius]
+    # max_label = labels_filtered[radii_filtered == max_radius]
+    # print(f"min_label:{min_label}")
+    # print(f"max_label:{max_label}")
+    
+    # # Create empty lists for all masses and radii
+    # all_masses = []
+    # all_radii = []
+    # unique_labels=[]
+
+    # # Iterate over unique labels
+    # unique_labels.append(min_label)
+    # unique_labels.append(max_label)
+    # print(f"unique_labels:{unique_labels}")
+    # for label in unique_labels:
+    #     # Get masses and radii for current label
+    #     label_masses = masses_filtered[labels_filtered == label]
+    #     label_radii = radii_filtered[labels_filtered == label]
+
+    #     # Append masses and radii to the respective lists
+    #     all_masses.append(label_masses)
+    #     all_radii.append(label_radii)
+    # print(f"all_masses:{all_masses}")
+    # print(f"all_radii:{all_radii}")
+
+    # for i in range(len(unique_labels)):
+    #     plt.plot(all_radii[i], all_masses[i], 'r-', label=unique_labels[i])
+
+    # plt.legend()
+    # plt.show()
    
     # # Create empty lists for all masses and radii
     # all_masses = []

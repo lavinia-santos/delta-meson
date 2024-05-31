@@ -2,7 +2,11 @@ import os, subprocess
 import matplotlib.pyplot as plt
 import pandas as pd
 
+############################PUT THE CORRECT NUMBER OF LINES IN THE FILES##############
 num_lines = 3
+######################################################################################
+
+######DO NOT FORGET OF CHANGING THE PARAMETERS IN THE FILES ACCORDING TO THE EOS YOU WANT TO USE######
 
 def do_eos_delta():
     input_file = "delta.dat"
@@ -181,11 +185,11 @@ def plot_pressure_vs_energy_density():
 
     
 def main():
-    #do_properties_delta()
+    do_properties_delta()
     do_eos_delta()
-    # add_crust()
-    # do_tov_delta()
-    # plot_mass_radius()
+    add_crust()
+    do_tov_delta()
+    plot_mass_radius()
     #check on corner plots
 
 main()

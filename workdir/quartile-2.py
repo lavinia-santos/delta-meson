@@ -1,10 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import sys
+#import sys
 from scipy.interpolate import interp1d
 
-original_stdout = sys.stdout
+#original_stdout = sys.stdout
 
 
 ############################################
@@ -12,86 +12,84 @@ original_stdout = sys.stdout
 #Let's try with matrices instead of lists
 #############################################
 
-
-
-
 def plot_mr_curve():
-    # M=[]
-    # R=[]
-    # q1=[]
-    # q3=[]
-    # Mass=[]
+    N_points = 200
     output_file = "output-quartile.txt"
-    # # Load data from file
-    # N_points=200
-    # df = pd.read_csv('tov-data-ex.dat', sep='   ')
-    # df = df.rename(columns={df.columns[0]: 'label', df.columns[1]: 'energy density', df.columns[2]: 'mass', df.columns[3]: 'radius', df.columns[4]: 'baryonic masses', df.columns[5]: 'density'})
-    # M_x=np.linspace(min(df.mass), max(df.mass), N_points)
-    # print(df)
-
-    # labels = np.asarray(df['label'])
-    # labels = np.unique(labels)
-    # #print(f"labels:{labels}")
-
-    # N_models = len(labels)
-
-    # for x in range(1,N_models+1):
-    #     print(x)
-
-    #     M_Temp = np.asarray(df.mass[df.label == x])
-    #     #M_Temp = np.sort(M_Temp)
-        
-    #     #print(f"M_Temp:{M_Temp}")
-    #     R_Temp = np.asarray(df.radius[df.label == x])
-    #     #R_Temp = np.sort(R_Temp)
-    #     #print(f"R_Temp:{R_Temp}")
-        
-    #     #index=M_Temp.argmax()
-    #     # print(f"index:{index}")
-    #     # M_df=M_Temp[index:]
-    #     # R_df=R_Temp[index:]
-    #     # print(f"M_df:{M_df}, R_df:{R_df}")
-    #     #if x !=1:
-    #     tck = interp1d(M_Temp, R_Temp, bounds_error=False, kind='linear', fill_value=(np.nan, np.nan))
-
-    #     for k in range(N_points):
-    #         R_Temp=tck(M_x[k])
-    #         M.append(M_x[k])
-    #         R.append(R_Temp)
-    # eos=pd.DataFrame({'M':M, 'R':R})
-
-    # #print(eos)
-    # count=0
-    # for mass in eos['M']:
-    #     #print(count, len(eos['M']))
-    #     print(f"{count}/{len(eos['M'])}")
-    #     count+=1
-    #     df_temp=eos.query(f'M=={mass}')
-
-    #     q1_temp,q3_temp=np.nanquantile(df_temp['R'], [0.16, 0.84])
-    #     q1.append(q1_temp)
-    #     q3.append(q3_temp)
-    #     Mass.append(mass)
-
-    # with open(output_file, 'w') as f:
-    #     for i in range(len(Mass)):
-    #         f.write(f"{Mass[i]} {q1[i]} {q3[i]}\n")
+   
+    # Load data from file
+    df = pd.read_csv('tov-data-ex.dat', sep='\s+', engine='python')
+    df = df.rename(columns={df.columns[0]: 'label', df.columns[1]: 'energy_density', df.columns[2]: 'mass', df.columns[3]: 'radius', df.columns[4]: 'baryonic_masses', df.columns[5]: 'density'})
     
-    # print(f"q1:{q1}")
-    # print(f"q3:{q3}")
-    # print(f"mass:{Mass}")
+    # Sort and filter data
+    #df = df.sort_values(by='radius')
+    df = df[df['radius'] < 13.5]
+    df=df[df['radius'] > 11.0]
+    
+    # Generate mass points
+    M_x = np.linspace(df['mass'].min(), df['mass'].max(), N_points)
+    
+    # Get unique labels
+    labels = df['label'].unique()
+    print(f"labels:{labels}")
+    N_models = len(labels)
+    
+    # Initialize lists for M and R
+    M = []
+    R = []
 
-    final_data=np.loadtxt(output_file)
-    Mass=final_data[:,0]
-    q1=final_data[:,1]
-    q3=final_data[:,2]
-    plt.plot(q1, Mass, linestyle='dashed', color='black')
-    plt.plot(q3, Mass, linestyle='dashed', color='black')
+    for label in labels:
+        # Filter data by label
+        temp_df = df[df['label'] == label]
+
+        # If the filtered data is not empty
+        if not temp_df.empty:
+
+            
+            # Slice the data from the index of maximum mass
+            mass_df = temp_df['mass']
+            radius_df = temp_df['radius']
+            # print(f"mass_df:{mass_df }, radius_df:{radius_df}")
+
+            if not mass_df.empty:
+            # Interpolation
+                tck = interp1d(mass_df, radius_df, bounds_error=False, kind='linear', fill_value=(np.nan, np.nan))
+            
+                # Append interpolated values to M and R lists
+                R.extend(tck(M_x))
+                M.extend(M_x)
+
+    
+    # Create a DataFrame for interpolated values
+    eos = pd.DataFrame({'M': M, 'R': R})
+  
+    
+    # Initialize lists for quartiles and mass
+    q1 = []
+    q3 = []
+    Mass = []
+    # Compute quartiles
+    for mass in M_x:
+        df_temp = eos[eos['M'] == mass]
+        if len(df_temp) > 1:  # Ensure there are enough points to calculate quantiles
+            q1_temp, q3_temp = np.nanquantile(df_temp['R'], [0.16, 0.84])
+        else:
+            q1_temp, q3_temp = np.nan, np.nan  # Handle cases with insufficient data
+        q1.append(q1_temp)
+        q3.append(q3_temp)
+        Mass.append(mass)
+
+    # Write results to file
+    with open(output_file, 'w') as f:
+        for mass, q1_val, q3_val in zip(Mass, q1, q3):
+            f.write(f"{mass} {q1_val} {q3_val}\n")
+    
+    # Plot the results
+    plt.plot(q1, Mass, linestyle='dashed', color='black', label='q1')
+    plt.plot(q3, Mass, linestyle='dashed', color='black', label='q3')
+    plt.xlabel('Radius')
+    plt.ylabel('Mass')
+    plt.legend()
     plt.show()
 
-
-
 plot_mr_curve()
-
-
 

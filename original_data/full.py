@@ -2,7 +2,7 @@ import os, subprocess
 import matplotlib.pyplot as plt
 import pandas as pd
 
-num_lines = 7734
+num_lines = 5104
 
 def do_eos_delta():
     input_file = "delta.dat"
@@ -13,7 +13,7 @@ def do_eos_delta():
     with open(input_file, "r") as infile:
         lines = infile.readlines()
     
-    for i in range(0 , num_lines):
+    for i in range(0, num_lines):
        with open(temp_input_file, "w") as tempfile:
         pass
        
@@ -95,13 +95,11 @@ def do_properties_delta():
     output_dir = "properties-outputs"
     temp_input_file = "delta.inp"
     
-    num_lines = 2
-
     # Open the input file
     with open(input_file, "r") as infile:
         lines = infile.readlines()
     
-    output_file = f"{output_dir}/props.txt"
+    output_file = f"{output_dir}/props.dat"
     with open(output_file, "w"):
         pass
     
@@ -184,13 +182,31 @@ def plot_pressure_vs_energy_density():
         plt.plot(xi, yi, label=f"file{i}")
     plt.legend()
     plt.show()
+ 
+    core_dir = "tov-outputs/"
+    #output_dir = "beta-outputs/with-crust"
+    output_file = "tov-data.txt"
+
+    with open (output_file, "w"):
+            pass
     
+    for i in range(0, num_lines):
+        input_file = f"{core_dir}tov{i+1}.txt"
+        
+        with open(input_file, "r") as infile, open(output_file, "a") as outfile:
+            for line in infile:
+                # Escreve o número do arquivo de entrada e a linha no arquivo de saída
+                outfile.write(f"{i+1} {line}")
+        print(f"tov {i+1} done")
+
+
+
 def main():
     do_properties_delta()
     do_eos_delta()
     add_crust()
     do_tov_delta()
-    plot_mass_radius()
+    #plot_mass_radius()
     #check on corner plots
 
 

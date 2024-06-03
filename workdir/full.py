@@ -2,11 +2,13 @@ import os, subprocess
 import matplotlib.pyplot as plt
 import pandas as pd
 
-############################PUT THE CORRECT NUMBER OF LINES IN THE FILES##############
-num_lines = 3
-######################################################################################
 
-######DO NOT FORGET OF CHANGING THE PARAMETERS IN THE FILES ACCORDING TO THE EOS YOU WANT TO USE######
+############################################
+#DO NOT FORGET TO CHANGE THE NUMBER OF LINES AND THE PARAMETERS ACCORDING TO THE EOS
+#ALSO, MAYBE CONSIDER ADDING CUDA TO THE CODE
+#############################################
+
+num_lines = 5226
 
 def do_eos_delta():
     input_file = "delta.dat"
@@ -17,20 +19,25 @@ def do_eos_delta():
     with open(input_file, "r") as infile:
         lines = infile.readlines()
     
-    for i in range(0 , num_lines):
+    for i in range(0, num_lines):
        with open(temp_input_file, "w") as tempfile:
         pass
        
+    
         with open(temp_input_file, "w") as tempfile:
             tempfile.write(lines[i].strip()+"\n")
         
+        #print(i)
+        #with open(temp_input_file, "r") as tempfile:
+        #its not necessary to remove the old files because it overwrites them (w)
         output_file = f"{output_dir}/beta-eq-eos{i+1}.txt"
         # Execute the external command
         result = subprocess.run("./beta-eq", shell=True)
-        result
-        # Write (overwrite!) the contents of fort.7 to the output file
+            #result
+            # Write (overwrite!) the contents of fort.7 to the output file
         with open("fort.7", "r") as fort_file, open(output_file, "w") as outfile:
             outfile.write(fort_file.read())
+                
         # Remove the temporary input file
         if os.path.exists(temp_input_file):
             os.remove(temp_input_file)
@@ -51,7 +58,9 @@ def add_crust():
                 if line.strip():
                     core_new_file.write("  ".join(line.split()[:3]) + "\n")
 
-
+    
+        # with open(output_file, "w"):
+        #     pass
         with open("bps_nl3wr_crust.dat", "r") as crust, open(output_file, "w") as outfile:
             outfile.write(crust.read())
    
@@ -70,20 +79,23 @@ def do_tov_delta():
             pass
         with open(input_file, "r") as infile, open(temp_input_file, "a") as tempfile:   
             tempfile.write(infile.read())
-
+        
+        #print(tempfile)
+        
         with open(temp_input_file, "a") as tempfile:
             tempfile.write("-1. -1. -1.")
 
         result = subprocess.run("./tov", shell=True)
         result
+        #result = subprocess.run("./beta-eq", shell=True)
 
         with open("tov.out", "r") as tov_file, open(output_file, "w") as outfile:
             outfile.write(tov_file.read())
         
         print(f"tov {i+1} done")
-
-        if os.path.exists(temp_input_file):
-            os.remove(temp_input_file)
+        
+        # with open(temp_input_file, "w") as tempfile:
+        #     pass
 def do_properties_delta():
     input_file = "delta.dat"
     output_dir = "properties-outputs"
@@ -93,8 +105,7 @@ def do_properties_delta():
     with open(input_file, "r") as infile:
         lines = infile.readlines()
     
-    output_file = f"{output_dir}/props.txt"
-
+    output_file = f"{output_dir}/props.dat"
     with open(output_file, "w"):
         pass
     
@@ -106,44 +117,20 @@ def do_properties_delta():
         with open(temp_input_file, "w") as tempfile:
             tempfile.write(lines[i].strip()+"\n")
         
+        #print(i)
+        #with open(temp_input_file, "r") as tempfile:
+        #its not necessary to remove the old files because it overwrites them (w)
         
         # Execute the external command
         result = subprocess.run("./properties", shell=True)
-        result
-
-        #Write (overwrite!) the contents of fort.60 to the output file
+            #result
+            # Write (overwrite!) the contents of fort.7 to the output file
         with open("fort.60", "r") as fort_file, open(output_file, "a") as outfile:
-            for line in fort_file:
-                #outfile.write(f"{i+1}")
-            #### test carefully #####
-                if line.strip():
-                    columns = line.split()
-                    del columns[0]
-                    outfile.write(f"{i+1}")
-                    for j in range(len(columns)):
-                        outfile.write(" " + columns[j] + " ")
-                    outfile.write("\n")
-            ####### otherwise use the fix_values() function #####
+            outfile.write(f"{i+1}"+fort_file.read() + '\n')
+                
         # Remove the temporary input file
         if os.path.exists(temp_input_file):
             os.remove(temp_input_file)
-
-##### use this if the util inside the function is not working ######
-def fix_columns():
-    input_file = "properties-outputs/props.txt"
-    output_file = "properties-outputs/props_1.txt"
-    
-    with open(input_file, "r") as infile, open(output_file, "w") as outfile:
-        for line in infile:
-            
-            if line.strip():
-                columns = line.split()
-                del columns[1]
-                for i in range(len(columns)):
-                    outfile.write( columns[i] + " ")
-                outfile.write("\n")
-#####################################################################             
-
 
 def plot_mass_radius():
     input_dir = "tov-outputs"
@@ -182,15 +169,51 @@ def plot_pressure_vs_energy_density():
         plt.plot(xi, yi)
     plt.legend()
     plt.show()
+#def plot_energy_vs_density():
+    input_dir = "beta-outputs/with-crust"
+    for i in range (1, num_lines + 1):
+        fm4_file = f"{input_dir}/beta-crust{i}.txt"
+        input_file = f"{input_dir}/beta-crust-Mevfm3-{i}.txt"
+        with open(fm4_file, "r") as prevfile, open(input_file, "w") as infile:
+            infile.write(prevfile.read())
+        df = pd.read_csv(input_file, sep="  ", header=None, on_bad_lines='skip')
+        df = df.rename(columns={df.columns[0]: 'density', df.columns[1]: 'energy', df.columns[2]: 'pressure'})
+        col = ['energy']
+        df[col] = df[col].mul(df['density'], axis=0)
+        xi=[]
+        yi=[]
+        #needs to convert df to numpy because pandas and matplotlib doesn't get along with well
+        xi=df['density'].to_numpy()
+        yi=df['energy'].to_numpy()
+        plt.plot(xi, yi, label=f"file{i}")
+    plt.legend()
+    plt.show()
+ 
+    core_dir = "tov-outputs/"
+    #output_dir = "beta-outputs/with-crust"
+    output_file = "tov-data.txt"
 
+    with open (output_file, "w"):
+            pass
     
+    for i in range(0, num_lines):
+        input_file = f"{core_dir}tov{i+1}.txt"
+        
+        with open(input_file, "r") as infile, open(output_file, "a") as outfile:
+            for line in infile:
+                # Escreve o número do arquivo de entrada e a linha no arquivo de saída
+                outfile.write(f"{i+1} {line}")
+        print(f"tov {i+1} done")
+
+
+
 def main():
-    do_properties_delta()
-    do_eos_delta()
-    add_crust()
+    # do_properties_delta()
+    # do_eos_delta()
+    # add_crust()
     do_tov_delta()
-    plot_mass_radius()
+    #plot_mass_radius()
     #check on corner plots
 
+
 main()
-#plot_pressure_vs_energy_density()

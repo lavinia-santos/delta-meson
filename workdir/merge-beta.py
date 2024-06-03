@@ -1,10 +1,10 @@
-num_lines= 3
+num_lines= 5226
 
 
 def merge_beta_delta():
     core_dir = "beta-outputs/"
     #output_dir = "beta-outputs/with-crust"
-    output_file = "beta-data.txt"
+    output_file = "beta-data.dat"
 
     with open (output_file, "w"):
             pass
@@ -21,7 +21,7 @@ def merge_beta_delta():
 def merge_tov_delta():
     core_dir = "tov-outputs/"
     #output_dir = "beta-outputs/with-crust"
-    output_file = "tov-data.txt"
+    output_file = "tov-data.dat"
 
     with open (output_file, "w"):
             pass

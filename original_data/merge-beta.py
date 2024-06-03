@@ -35,3 +35,4 @@ def merge_tov_delta():
         print(f"tov {i+1} done")
 
 merge_beta_delta()
+merge_tov_delta()

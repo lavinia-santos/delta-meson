@@ -17,7 +17,7 @@ def plot_mr_curve():
     output_file = "output-quartile.txt"
    
     # Load data from file
-    df = pd.read_csv('tov-data-ex.dat', sep='\s+', engine='python')
+    df = pd.read_csv('tov-data.dat', sep='\s+', engine='python')
     df = df.rename(columns={df.columns[0]: 'label', df.columns[1]: 'energy_density', df.columns[2]: 'mass', df.columns[3]: 'radius', df.columns[4]: 'baryonic_masses', df.columns[5]: 'density'})
     
     # Sort and filter data

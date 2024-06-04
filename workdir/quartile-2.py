@@ -17,7 +17,7 @@ def plot_mr_curve():
     output_file = "output-quartile.txt"
    
     # Load data from file
-    df = pd.read_csv('tov-data.dat', sep='\s+', engine='python')
+    df = pd.read_csv('../../big-results/tov-data20.dat', sep='\s+', engine='python')
     df = df.rename(columns={df.columns[0]: 'label', df.columns[1]: 'energy_density', df.columns[2]: 'mass', df.columns[3]: 'radius', df.columns[4]: 'baryonic_masses', df.columns[5]: 'density'})
     
     # Sort and filter data
@@ -46,6 +46,10 @@ def plot_mr_curve():
 
             
             # Slice the data from the index of maximum mass
+            max_mass=max(temp_df['mass'])
+            max_radius=temp_df['radius'][temp_df['mass']==max_mass]
+            temp_df = temp_df[temp_df['radius'] > max_radius.values[0]]
+            print(temp_df)
             mass_df = temp_df['mass']
             radius_df = temp_df['radius']
             # print(f"mass_df:{mass_df }, radius_df:{radius_df}")
@@ -84,8 +88,8 @@ def plot_mr_curve():
             f.write(f"{mass} {q1_val} {q3_val}\n")
     
     # Plot the results
-    plt.plot(q1, Mass, linestyle='dashed', color='black', label='q1')
-    plt.plot(q3, Mass, linestyle='dashed', color='black', label='q3')
+    plt.plot(q1, Mass, linestyle='dashed', color='black')
+    plt.plot(q3, Mass, linestyle='dashed', color='black')
     plt.xlabel('Radius')
     plt.ylabel('Mass')
     plt.legend()

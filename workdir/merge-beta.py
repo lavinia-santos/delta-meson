@@ -1,4 +1,4 @@
-num_lines= 5226
+num_lines= 7734
 
 
 def merge_beta_delta():
@@ -35,5 +35,5 @@ def merge_tov_delta():
                 outfile.write(f"{i+1} {line}")
         print(f"tov {i+1} done")
 
-merge_beta_delta()
+#merge_beta_delta()
 merge_tov_delta()

@@ -78,8 +78,8 @@ c         write(6,*)gs,gv,grho,gdel,aa,bb,gwr
 c         goto5
 c      endif
 c------------------------------------------
-c     EOS21
-c         EOS21 9.220247 11.170082 11.087122 4.036904 -4.553914 0.003810 0.040742      
+c     EOS18
+c         EOS18 9.220247 11.170082 11.087122 4.036904 -4.553914 0.003810 0.040742      
 c------------------------------------------
 c       if(ipar.eq.12)then
          rm=939.d0
@@ -87,12 +87,12 @@ c       if(ipar.eq.12)then
          RMV=782.50D0/RM
          RMRho=763.D0/RM
          RMDEL=980.d0/rm
-         gs=9.608190d0
-         gv=11.957725d0
+         gs=9.220247d0
+         gv=11.170082d0
 c         grho=11.087122d0
-         B=3.117923d-3
-         C=-4.098400d-3
-         XSI=0.000255d0
+         B=4.036904d0
+         C=-4.553914d0
+         XSI=0.003810d0
 !         gwr=0.040742d0
          RKA=2*b*gs**3*1.d-3 
          RLAMBDA=6*c*gs**4*1.d-3
@@ -321,7 +321,7 @@ C#######################################################################
       real*8 X0(1),X1(1),XMIN(1),XMAX(1),x(1),rmdel,gdel
       real*8 X0a(1),X1a(1),XMINa(1),XMAXa(1),Za(1)
       real*8 X0b(2),X1b(2),XMINb(2),XMAXb(2),xb(2)
-      real*8 xkfp,xkfn,gwr,dener,ener,esy,rmrho2,rho0,ydb
+      real*8 ydb,xkfp,xkfn,gwr,dener,ener,esy,rmrho2,rho0
       real*8 yp,ef,xkf,res4n,res4p,res3n,res3p,f4p,f4n,f3p,f3n
       real*8 fd,fdel,rmep,rmen,rhos,rdel,esy1,esy2,esy3,esy00
       integer ierr,iact,ii,i      

@@ -5,8 +5,8 @@ import pandas as pd
 #### Plots
 
 input_dir = "tov-outputs"
-num_lines = 5000
-
+num_lines = 500
+colors=['mediumpurple', 'darkviolet', 'deeppink', 'navy', 'deeppink', 'springgreen']
 
 for i in range (1, num_lines + 1):
 #for i in range(12,13):
@@ -19,7 +19,7 @@ for i in range (1, num_lines + 1):
     xi=df['R'].to_numpy()
     yi=df['M'].to_numpy()
     #needs to convert df to numpy because pandas and matplotlib doesn't get along with well
-    plt.plot(xi, yi)
+    plt.plot(xi, yi, color=colors[i%6])
 plt.legend()
 plt.show()
 

@@ -1,6 +1,7 @@
 import os, subprocess
 import matplotlib.pyplot as plt
 import pandas as pd
+from numba import jit, cuda
 
 
 ############################################
@@ -8,7 +9,9 @@ import pandas as pd
 #ALSO, MAYBE CONSIDER ADDING CUDA TO THE CODE
 #############################################
 
-num_lines = 5226
+num_lines = 7734
+
+#@jit(target_backend='cuda')
 
 def do_eos_delta():
     input_file = "delta.dat"
@@ -19,7 +22,7 @@ def do_eos_delta():
     with open(input_file, "r") as infile:
         lines = infile.readlines()
     
-    for i in range(0, num_lines):
+    for i in range(5506, num_lines):
        with open(temp_input_file, "w") as tempfile:
         pass
        
@@ -45,7 +48,7 @@ def add_crust():
     core_dir = "beta-outputs/"
     output_dir = "beta-outputs/with-crust"
 
-    for i in range(0, num_lines):
+    for i in range(5506, num_lines):
         core_old_file_path = f"{core_dir}beta-eq-eos{i+1}.txt"
         core_new_file_path = f"{core_dir}beta-eq-eos-new{i+1}.txt"
         output_file = f"{output_dir}/beta-crust{i+1}.txt"
@@ -71,7 +74,7 @@ def do_tov_delta():
     output_dir = "tov-outputs"
     temp_input_file = "tov.dat"
 
-    for i in range(0, num_lines):
+    for i in range(5506, num_lines):
         input_file = f"{input_dir}/beta-crust{i+1}.txt"
         output_file = f"{output_dir}/tov{i+1}.txt"
     
@@ -109,7 +112,7 @@ def do_properties_delta():
     with open(output_file, "w"):
         pass
     
-    for i in range(0, num_lines):
+    for i in range(5506, num_lines):
        with open(temp_input_file, "w") as tempfile:
         pass
        
@@ -208,9 +211,9 @@ def plot_pressure_vs_energy_density():
 
 
 def main():
-    # do_properties_delta()
-    # do_eos_delta()
-    # add_crust()
+    #do_properties_delta()
+    do_eos_delta()
+    add_crust()
     do_tov_delta()
     #plot_mass_radius()
     #check on corner plots

@@ -1,165 +1,101 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
+#import sys
+from scipy.interpolate import interp1d
+
+#original_stdout = sys.stdout
+
 
 ############################################
-#The main code works but it takes a long time to run
-#The code is not optimized
+#2nd try
+#Let's try with matrices instead of lists
 #############################################
 
-def quartile():
-    #get mass values from the tov output file
-    #for now, we use a dummy array
-    #mass_raw=[5,7,15,22,45]
-
-    # Calcule os quantis
-    quantis=0.1
-    quantiles = np.arange(quantis, 1 + quantis, quantis)
-    #quantile_values = [np.quantile(lst, q) for q in quantiles]
-
-    # Encontre os valores correspondentes aos quantis na lista original
-    #lst_result = [min(lst, key=lambda x: abs(x - qv)) for qv in quantile_values]
-
-    input_file = "tov-data-ex.txt" #R: col3, M: col2
-    num_curves = 250
-    intervals=np.linspace(0.6,1,50)
-
-    masses_raw=[]
-    radius={}
-    mvsr = {}
-    masses=[]
+def plot_mr_curve():
+    N_points = 200
+    output_file = "output-quartile.txt"
+   
+    # Load data from file
+    df = pd.read_csv('../../big-results/tov-data20.dat', sep='\s+', engine='python')
+    df = df.rename(columns={df.columns[0]: 'label', df.columns[1]: 'energy_density', df.columns[2]: 'mass', df.columns[3]: 'radius', df.columns[4]: 'baryonic_masses', df.columns[5]: 'density'})
     
-    #print(input_file)
-    with open(input_file, "r") as infile:
-        for line in infile:
-            columns = line.split()
-            print(f"starting first scan {columns[0]}th time")
-            
-            # print(line)
-            # print(f"starting first scan {columns[0]}th time")
-            
-            #print(columns)
-            masses_raw.append(float(columns[2]))
-            quantile_values = [np.quantile(masses_raw, q) for q in quantiles]
-            for i in intervals:
-                #print(i)
-                masses = [min(masses_raw, key=lambda x: abs(x - qv)) for qv in quantile_values]
-            #masses.append(np.quantile(masses_raw, i))
-        # print(f"masses_raw:{masses_raw}")
-            #print(f"q_mass:{masses}")   
-        #for line in infile:
-            #print(f"line:{line}")
-        # for line in infile:
-        #     #print(line)
-        #     columns = line.split()
-            
-            for i in range(1,num_curves+1):
-                #print(f"i:{i}")
-                # print(f"columns[0]:{columns[0]}")
-                if int(columns[0]) == i and int(columns[0]) not in radius.keys():
-                    # print(radius.keys())
-                    # print(f"in if loop columns[0] (col):{columns[0]}")
-                    radius[i] = []
-                    radius[i].append(float(columns[3]))
-                    # print(radius)
-                    # print(f"radius[{i}] if:{radius[i]}")
-
-                elif int(columns[0]) == i and int(columns[0]) in radius.keys():
-                    #print(f"in else loop columns[0] (col):{columns[0]}")
-                    #temp.append(columns[3])
-                    #print(temp)
-                    radius[i].append(float(columns[3]))
-                    #print(f"radius[{i}] elif:{radius[i]}")
-            
-            
+    # Sort and filter data
+    #df = df.sort_values(by='radius')
+    df = df[df['radius'] < 14.5]
+    df=df[df['radius'] > 10.0]
+    df = df[df['mass'] < 2.30]
     
-        #print(f"masses:{masses}")
-    # with open(input_file, "r") as infile:
-        
-    #     for line in infile:
-        
-            #columns = line.split()
-            #print(f"columns:{columns}")
-            #print(f"masses after lines:{masses}")
-    print(f"masses before for:{masses}")
-    with open(input_file, "r") as infile:
-        for line in infile:
-            columns = line.split()
-            print(f"starting second scan {columns[0]}th time")
-            for mass in masses:
-                #print(f"masses:{masses}")
-                # print(f"mass:{mass}")
-                #print(f"mass before if loop:{mass}")
-                #print(f"columns[2]:{columns[2]}")
-                if float(columns[2]) == float(mass):
-                    print(f"mass :{mass}")
-                    print(f"columns[2]:{columns[2]}")
-                    if float(columns[2]) not in mvsr.keys():
-                        #print(f"mass {columns[0]}:{mass}")
-                        #print(f"mvsr.keys():{mvsr.keys()}")
-                        # print(f"radius {columns[0]}:{columns[3]}")
-                            #print(f"in if loop {columns[2]} (mass):{columns[2]}")
-                        mvsr[mass] = []
-                        mvsr[mass].append(columns[3])
-                    if float(columns[2]) in mvsr.keys():
-                    #print(f"in else loop columns[2] (mass):{columns[2]}")
-                        mvsr[mass].append(columns[3])
-        # print(f"{columns[0]}th scan done")
-        # for line in infile:
-        #     columns = line.split()
-            for key in mvsr:
-                mvsr[key] = [float(val) for val in mvsr[key]]
-       
-            
-    # print(f"radius:{radius}")
-    #print(f"masses:{masses}")
-   # for j in mvsr.items():
-    print(f"masses:{masses}")
-    #print(f"mvsr:{mvsr.keys()}")
-        #print(f"mvsr:{mvsr[j]}")
-    print(f"mvsr:{mvsr} ")
-    with open("mvsr.txt", "w") as outfile:
-        outfile.write(str(mvsr))
+    # Generate mass points
+    M_x = np.linspace(df['mass'].min(), df['mass'].max(), N_points)
     
-    #mvsr: keys: mass, values: radius list corresponding to the mass
-
-        # print(f"radius:{radius.values()}")
-
-    #the horizontal slice was set up
-    #now, let's calculate the quartiles
-
-
-    q1=[]
-    q3=[]
-    #print(f"mvsr.values():{mvsr.values()}")
-    for arr in mvsr.values():
-        #print(f"arr:{arr} \n")
-        # for i in range(len(arr)):
-        #     print(f"i:{i}")
-        #print(mvsr.items())
-        #print(np.quantile(arr, 0.25))
-        q1.append(np.quantile(arr, 0.05))
-        q3.append(np.quantile(arr, 0.95))
-    print(f"q1:{q1}")
-    print(f"q3:{q3}")
-    #q1 and q3 are radius values related to a given mass value
-
-    #     q1.append(np.quantile(arr, 0.25))
-        
-    #     q3.append(np.quantile(arr, 0.75))
+    # Get unique labels
+    labels = df['label'].unique()
+    print(f"labels:{labels}")
+    N_models = len(labels)
     
-    # print(f"q1:{q1}")
-    # print(f"q3:{q3}")
+    # Initialize lists for M and R
+    M = []
+    R = []
+
+    for label in labels:
+        # Filter data by label
+        temp_df = df[df['label'] == label]
+
+        # If the filtered data is not empty
+        if not temp_df.empty:
+
             
+            # Slice the data from the index of maximum mass
+            # max_mass=max(temp_df['mass'])
+            # max_radius=temp_df['radius'][temp_df['mass']==max_mass]
+            # temp_df = temp_df[temp_df['radius'] > max_radius.values[0]]
+            # print(temp_df)
+            mass_df = temp_df['mass']
+            radius_df = temp_df['radius']
+            # print(f"mass_df:{mass_df }, radius_df:{radius_df}")
 
-    # print(f"q1:{q1}")
-    # print(f"q3:{q3}")
+            if not mass_df.empty:
+            # Interpolation
+                tck = interp1d(mass_df, radius_df, bounds_error=False, kind='linear', fill_value=(np.nan, np.nan))
+            
+                # Append interpolated values to M and R lists
+                R.extend(tck(M_x))
+                M.extend(M_x)
 
-    plt.plot(q1, masses, 'r-')
-    plt.plot(q3, masses, 'b-')
+    
+    # Create a DataFrame for interpolated values
+    eos = pd.DataFrame({'M': M, 'R': R})
+  
+    
+    # Initialize lists for quartiles and mass
+    q1 = []
+    q3 = []
+    Mass = []
+    # Compute quartiles
+    for mass in M_x:
+        df_temp = eos[eos['M'] == mass]
+        if len(df_temp) > 1:  # Ensure there are enough points to calculate quantiles
+            q1_temp, q3_temp = np.nanquantile(df_temp['R'], [0.16, 0.84])
+        else:
+            q1_temp, q3_temp = np.nan, np.nan  # Handle cases with insufficient data
+        q1.append(q1_temp)
+        q3.append(q3_temp)
+        Mass.append(mass)
+
+    # Write results to file
+    with open(output_file, 'w') as f:
+        for mass, q1_val, q3_val in zip(Mass, q1, q3):
+            f.write(f"{mass} {q1_val} {q3_val}\n")
+    
+    # Plot the results
+    plt.plot(q1, Mass, linestyle='dashed', color='black')
+    plt.plot(q3, Mass, linestyle='dashed', color='black')
+    plt.xlabel('Radius')
+    plt.ylabel('Mass')
+    plt.legend()
+    #plt.savefig("quartile-plot.png")
     plt.show()
 
-    
-   
-
-quartile()
+plot_mr_curve()
 

@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-eos_number=[20,21,8]
+eos_number=[20,18,21,8]
 
 for i in eos_number:
     props=f"EOS{i}/props.dat"
@@ -16,11 +16,15 @@ for i in eos_number:
                 o.write(line) 
     df=pd.read_csv(corner_plot, sep=",", header=None, skip_blank_lines=True, on_bad_lines='skip')
     df=df.rename(columns={df.columns[9]: 'Esym', df.columns[10]: 'L', df.columns[11]: 'Ksym', df.columns[12]: 'Qsym'})
-    print(df)
-    df=df[df['L'] < 100]
-    df=df[df['L'] > -100]
+    # print(df)
+    df=df[df['L'] < 200]
+    df=df[df['L'] > 0]
     df=df[df['Ksym'] > -200]
-    df=df[df['Ksym'] < 200]
+    df=df[df['Ksym'] < 100]
+    df=df[df['Esym'] > 0]
+    df=df[df['Esym'] < 100]
+    df=df[df['Qsym'] > 1000]
+    df=df[df['Qsym'] < 4000]
     props1 = df.to_numpy()
     print(df)
     good_columns=props1[:,9:13]
@@ -33,4 +37,4 @@ for i in eos_number:
     # figure.show()
     # plt.show()
     figure.suptitle(f"EOS{i}", fontsize=16)
-    figure.savefig(f"corner-test-props{i}.png")
+    figure.savefig(f"corner-props{i}.png")

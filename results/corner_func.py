@@ -1,12 +1,12 @@
-import corner
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-
+import corner
+import os
 
 
 #eos_number=[20,21,8]
-eos_number=[21]
+eos_number=[20]
 #plot coupling for 21
 
 
@@ -33,19 +33,21 @@ for i in eos_number:
     df=df[df['Qsym'] < 4000]
     props1 = df.to_numpy()
     #print(df)
-    good_columns=props1[:,1:4]
+    good_columns=props1[:,9:13]
     # print(good_columns)
 
     # print(good_columns)
-    # n=len(good_columns[0])
+    #n=len(good_columns[0])
     # cmap = plt.cm.get_cmap('gist_rainbow', n)
     # colors = [cmap(j) for j in range(n)]
 
 
-    figure=corner.corner(good_columns, labels=["L", "Ksym", "Qsym"], show_titles=True, color='blue')
-    #figure = corner.corner(good_columns, labels=["Esym", "L", "Ksym", "Qsym"], show_titles=True, color='blue')
-    # figure.show()
+    #figure=corner.corner(good_columns, labels=["Esym","L", "Ksym", "Qsym"], show_titles=True, color='blue')
+    figure = corner.corner(good_columns, labels=["Esym", "L", "Ksym", "Qsym"], show_titles=True, color='magenta', smooth=True)
+    #figure.show()
     # plt.show()
     figure.suptitle(f"EOS{i}", fontsize=16)
     figure.savefig(f"test-corner{i}.png")
+    os.remove(corner_plot)
+
 

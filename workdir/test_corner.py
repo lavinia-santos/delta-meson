@@ -1,10 +1,11 @@
 import corner
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 
-props="properties-outputs/props.csv"
+props="../results/EOS8/props.dat"
 corner_plot="corner.dat"
 with open( props, 'r') as r, open(corner_plot, 'w') as o: 
     for line in r: 
@@ -17,6 +18,6 @@ props1 = df.to_numpy()
 good_columns=props1[:,9:13]
 # print(good_columns)
 
-figure = corner.corner(good_columns, labels=["Esym", "L", "Ksym", "Qsym"], show_titles=True)
+figure = corner.corner(good_columns, labels=["Esym", "L", "Ksym", "Qsym"], show_titles=True, cmap=plt.cm.get_cmap('viridis'))
 figure.show()
 figure.savefig("corner-test.png")

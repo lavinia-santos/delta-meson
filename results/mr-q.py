@@ -25,8 +25,9 @@ def plot_mr_curve():
         
         # Sort and filter data
         #df = df.sort_values(by='radius')
-        df = df[df['radius'] < 13.5]
-        df=df[df['radius'] > 11.0]
+        df = df[df['radius'] < 14.5]
+        df=df[df['radius'] > 10.0]
+        df = df[df['mass'] > 0.5]
         
         # Generate mass points
         M_x = np.linspace(df['mass'].min(), df['mass'].max(), N_points)
@@ -87,10 +88,12 @@ def plot_mr_curve():
                 f.write(f"{mass} {q1_val} {q3_val}\n")
         
         # Plot the results
+        plt.clf()
         plt.plot(q1, Mass, linestyle='dashed', color='black')
         plt.plot(q3, Mass, linestyle='dashed', color='black')
         plt.xlabel('Radius')
         plt.ylabel('Mass')
+        plt.title(f"EOS{i}")
         plt.legend()
         #plt.savefig(f"mr-q-plot{i}.png")
         plt.show()

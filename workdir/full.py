@@ -216,7 +216,6 @@ def main():
     add_crust()
     do_tov_delta()
     #plot_mass_radius()
-    #check on corner plots
 
 
 main()

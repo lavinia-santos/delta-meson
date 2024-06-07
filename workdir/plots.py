@@ -27,6 +27,7 @@ for i in range (1, num_lines + 1):
     yi=df['mass'].to_numpy()
     plt.plot(xi, yi, color='black', linestyle='dashed')
     #plt.plot(xi, yi, color=colors[i%6])
+plt.title('EOS20')
 plt.legend()
 plt.show()
 

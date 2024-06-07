@@ -6,15 +6,15 @@ from scipy.interpolate import interp1d
 
 #original_stdout = sys.stdout
 
-eos_number=[20]
+eos_number=[8,20,21]
 
 ############################################
 #2nd try
-#Let's try with matrices instead of lists
+#Let's try with df instead of lists
 #############################################
 
 def plot_mr_curve():
-    N_points = 10
+    N_points = 100
     for num in eos_number:
         output_file = f"../results/EOS{num}/output-quartile.txt"
     
@@ -98,7 +98,7 @@ def plot_mr_curve():
         plt.ylabel('Mass')
         plt.title(f"EOS{num}")
         plt.legend()
-        plt.savefig(f"../results/quartile-plot{num}10.png")
+        plt.savefig(f"../results/MR-plot{num}.png")
         #plt.show()
 
 plot_mr_curve()

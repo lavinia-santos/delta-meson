@@ -20,7 +20,7 @@ for i in eos_number:
             if line.strip(): 
                 o.write(line) 
     df=pd.read_csv(corner_plot, sep=",", header=None, skip_blank_lines=True, on_bad_lines='skip')
-    df=df.rename(columns={df.columns[9]: 'Esym', df.columns[10]: 'L', df.columns[11]: 'Ksym', df.columns[12]: 'Qsym'})
+    df=df.rename(columns={df.columns[1]: 'grho',df.columns[2]: 'gdel',df.columns[3]: 'gwr',df.columns[5]: 'm_eff', df.columns[6]: 'EB', df.columns[9]: 'Esym', df.columns[10]: 'L', df.columns[11]: 'Ksym', df.columns[12]: 'Qsym'})
     #df=df.rename(columns={df.columns[0]: 'label', df.columns[1]: 'gr', df.columns[2]: 'gdel', df.columns[3]: 'lambda'})
     #print(df)
     df=df[df['L'] < 200]
@@ -31,10 +31,14 @@ for i in eos_number:
     df=df[df['Esym'] < 100]
     df=df[df['Qsym'] > 1000]
     df=df[df['Qsym'] < 4000]
+    df=df[df['gwr'] < 1]
+    df=df[df['grho'] < 16]
+    df=df[df['gdel'] < 2.4]
+    #df=df[df['gdel'] > -15]
     props1 = df.to_numpy()
     #print(df)
-    good_columns=props1[:,9:13]
-    # print(good_columns)
+    good_columns=props1[:,[1,2,3,9,10,11,12]]
+    print(good_columns)
 
     # print(good_columns)
     #n=len(good_columns[0])
@@ -43,11 +47,11 @@ for i in eos_number:
 
 
     #figure=corner.corner(good_columns, labels=["Esym","L", "Ksym", "Qsym"], show_titles=True, color='blue')
-    figure = corner.corner(good_columns, labels=["Esym", "L", "Ksym", "Qsym"], show_titles=True, color='magenta', smooth=True)
+    figure = corner.corner(good_columns, labels=["grho","gdel","gwr","Esym", "L", "Ksym", "Qsym"], show_titles=True, color='magenta', smooth=True, smooth1d=True)
     #figure.show()
     # plt.show()
     figure.suptitle(f"EOS{i}", fontsize=16)
-    figure.savefig(f"test-corner{i}.png")
+    figure.savefig(f"test2-corner{i}.png")
     os.remove(corner_plot)
 
 

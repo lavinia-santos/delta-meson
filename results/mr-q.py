@@ -16,8 +16,8 @@ eos_number=[20,21,8]
 
 def plot_mr_curve():
     for i in eos_number:
-        N_points = 200
-        output_file = f"output-quartile{i}.txt"
+        N_points = 100
+        output_file = f"output-quartile-CI90_{i}.txt"
     
         # Load data from file
         df = pd.read_csv(f'../../big-results/tov-data{i}.dat', sep='\s+', engine='python')
@@ -75,7 +75,7 @@ def plot_mr_curve():
         for mass in M_x:
             df_temp = eos[eos['M'] == mass]
             if len(df_temp) > 1:  # Ensure there are enough points to calculate quantiles
-                q1_temp, q3_temp = np.nanquantile(df_temp['R'], [0.16, 0.84])
+                q1_temp, q3_temp = np.nanquantile(df_temp['R'], [0.05, 0.95])
             else:
                 q1_temp, q3_temp = np.nan, np.nan  # Handle cases with insufficient data
             q1.append(q1_temp)
@@ -95,8 +95,8 @@ def plot_mr_curve():
         plt.ylabel('Mass')
         plt.title(f"EOS{i}")
         plt.legend()
-        #plt.savefig(f"mr-q-plot{i}.png")
-        plt.show()
+        plt.savefig(f"mr-q-90CI-plot{i}.png")
+        #plt.show()
 
 plot_mr_curve()
 

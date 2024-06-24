@@ -51,7 +51,8 @@ for num in eos_number:
     i+=1
 plt.ylim(0.5, 2.75)
 plt.legend()
-
+plt.xlabel(r'$R [km]$')
+plt.ylabel(r'$M [M_{\odot}]$')
 
 ## NICER DATA
 DIR = './' # colocar o diretório dos dados

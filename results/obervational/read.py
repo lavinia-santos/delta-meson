@@ -6,7 +6,7 @@ import pandas as pd
 #fig,ax=plt.subplots()
 # ax[0]: MxR, ax[1]: MxLambda
 
-colors=['navy', 'deeppink', 'darkviolet']
+colors=['deepskyblue', 'deeppink', 'darkviolet']
 
 eos_number=[8,20,21]
 font = {'family' : 'normal',
@@ -99,4 +99,4 @@ plt.fill(GW_50[:,0], GW_50[:,1],color="k",linestyle="dashed", linewidth=2, alpha
 #ax[1].errorbar(395, 1.36, xerr=325,capsize=6, linewidth=4, color="blue", alpha=0.5, zorder=10)
 
 #plt.show()
-plt.savefig("../obs-compare.png")
+plt.savefig("../obs-compare2.png")

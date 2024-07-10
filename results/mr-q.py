@@ -11,7 +11,7 @@ from scipy.interpolate import interp1d
 #2nd try
 #Let's try with matrices instead of lists
 #############################################
-eos_number=[20,21,8]
+eos_number=[21]
 
 
 def plot_mr_curve():
@@ -26,16 +26,16 @@ def plot_mr_curve():
         # Sort and filter data
         #df = df.sort_values(by='radius')
         df = df[df['radius'] < 14.5]
-        df=df[df['radius'] > 10.0]
-        df = df[df['mass'] > 0.5]
-        
+        # df=df[df['radius'] > 10.0]
+        # df = df[df['mass'] > 0.5]
+        print(f"df:{df}")
         # Generate mass points
         M_x = np.linspace(df['mass'].min(), df['mass'].max(), N_points)
         
         # Get unique labels
         labels = df['label'].unique()
         print(f"labels:{labels}")
-        N_models = len(labels)
+        #N_models = len(labels)
         
         # Initialize lists for M and R
         M = []
@@ -95,8 +95,8 @@ def plot_mr_curve():
         plt.ylabel('Mass')
         plt.title(f"EOS{i}")
         plt.legend()
-        plt.savefig(f"mr-q-90CI-plot{i}.png")
-        #plt.show()
+        #plt.savefig(f"mr-q-90CI-plot{i}.png")
+        plt.show()
 
 plot_mr_curve()
 

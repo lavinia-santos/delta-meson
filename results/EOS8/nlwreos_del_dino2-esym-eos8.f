@@ -78,8 +78,9 @@ c         write(6,*)gs,gv,grho,gdel,aa,bb,gwr
 c         goto5
 c      endif
 c------------------------------------------
-c     EOS18
-c         EOS18 9.220247 11.170082 11.087122 4.036904 -4.553914 0.003810 0.040742      
+c     EOS8
+c         EOS8 8.637377 10.348224 c11.087122c 3.910898 -2.158740
+c               0.001478 c0.040742c      
 c------------------------------------------
 c       if(ipar.eq.12)then
          rm=939.d0
@@ -87,12 +88,12 @@ c       if(ipar.eq.12)then
          RMV=782.50D0/RM
          RMRho=763.D0/RM
          RMDEL=980.d0/rm
-         gs=9.220247d0
-         gv=11.170082d0
+         gs=8.637377d0
+         gv=10.348224d0
 c         grho=11.087122d0
-         B=4.036904d0
-         C=-4.553914d0
-         XSI=0.003810d0
+         B=3.910898d0
+         C=-2.158740d0
+         XSI=0.001478d0
 !         gwr=0.040742d0
          RKA=2*b*gs**3*1.d-3 
          RLAMBDA=6*c*gs**4*1.d-3
@@ -212,9 +213,9 @@ c$$$c       write(6,*)'fort.60:ipar,rho0,EB,E_dens,pressure,
 c$$$c     1     K0,Q0,Esym,L,Ksym, Qsym'
 
        yp=0.5
-c       do i=1,1!00
-c          rho=0.01*i*(hc/rm)**3
-          rho=rho0
+       do i=1,100
+          rho=0.01*i*(hc/rm)**3
+c          rho=rho0
           rhop=rho*yp
           rhon=rho-rhop
           rhob=rho
@@ -227,20 +228,9 @@ c----------------------------------------------------------
 c     
           yy=-rho3/rho
           call thermo(yy,rho,rme,esy,press,dener)
-
-c-----------------------------------------------------------------------
-c-----------------------------------------------------------------------
-c-----------------------------------------------------------------------
-c           write esy*rme and rho
-c           comment rho=rho0
-c              do i de 1 a 100
-c               nao esquecer de descomentar o enddo
 c          write(6,*)rho*(rm/hc)**3,dener*rm,rmun*rm,rme
 !     &         ,rnun*rm,press*rm*(rm/hc)**3!
 c          pause
-c-----------------------------------------------------------------------
-c-----------------------------------------------------------------------
-c-----------------------------------------------------------------------
           h=.002d0
           call thermo(yy,rho*(1.d0+h),rme,esy,press,dener)
           fm1p=esy
@@ -303,13 +293,13 @@ c     1     .and.xl*rm.lt.140.d0)
            write(6,99)ipar,
      1        grho,gdel,gwr,rho*(rm/hc)**3,rme,dener*rm
      1         ,xk*rm,q0a*rm,
-     1         esy*rm,xl*rm,xksyma*rm,q0sym*rm!,xkt*rm
+     1         esy*rm,xl*rm,xksyma*rm,q0sym*rm,esy*rme!,xkt*rm
            write(60,99)ipar,
-     1        grho,gdel,gwr,rho*(rm/hc)**3,rme,dener*rm
+     1        grho,gdel,gwr,rho,rho*(rm/hc)**3,rme,dener*rm
      1         ,xk*rm,q0a*rm,
-     1         esy*rm,xl*rm,xksyma*rm,q0sym*rm!,xkt*rm
+     1         esy*rm,xl*rm,xksyma*rm,q0sym*rm,esy*rme!,xkt*rm
 
-c$$$       enddo
+       enddo
 c$$$      enddo
 c        enddo
       

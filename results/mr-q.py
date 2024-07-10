@@ -11,13 +11,13 @@ from scipy.interpolate import interp1d
 #2nd try
 #Let's try with matrices instead of lists
 #############################################
-eos_number=[21]
+eos_number=[8,20,21]
 
 
 def plot_mr_curve():
     for i in eos_number:
         N_points = 100
-        output_file = f"output-quartile-CI90_{i}.txt"
+        output_file = f"EOS{i}/output-quartile-2-CI90_{i}.txt"
     
         # Load data from file
         df = pd.read_csv(f'../../big-results/tov-data{i}.dat', sep='\s+', engine='python')
@@ -27,7 +27,7 @@ def plot_mr_curve():
         #df = df.sort_values(by='radius')
         df = df[df['radius'] < 14.5]
         # df=df[df['radius'] > 10.0]
-        # df = df[df['mass'] > 0.5]
+        df = df[df['mass'] > 0.5]
         print(f"df:{df}")
         # Generate mass points
         M_x = np.linspace(df['mass'].min(), df['mass'].max(), N_points)

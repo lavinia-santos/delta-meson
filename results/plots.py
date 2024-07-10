@@ -10,9 +10,10 @@ import pandas as pd
 #colors=['deepskyblue', 'deeppink', 'darkviolet']
 # colors=['blueviolet','mediumvioletred','royalblue','mediumvioletred']
 colors=['blue','red','green']
+colors=['deepskyblue', 'deeppink', 'darkviolet']
+
 eos_number=[8,20,21]
 font = {'family' : 'normal',
-        'weight' : 'bold',
         'size'   : 26}
 
 plt.rc('font', **font)
@@ -52,36 +53,36 @@ for num in eos_number:
     q1=[]
     q3=[]
     #plt.clf()
-    #print(f"EOS{num}")
+    print(f"EOS{num}")
     quartiles = f"test-quartile-proton{num}.txt"
-    #quartiles = f"EOS{num}/output-quartile-CI90_{num}.txt"
+    # quartiles = f"EOS{num}/output-quartile-CI90_{num}.txt"
     
-    #no_delta = f"EOS{num}/old_eos{num}_neutron.dat"
+    # no_delta = f"EOS{num}/old_eos{num}_neutron.dat"
 #     # no_delta2 = f"fsu2h.out"
     df = pd.read_csv(quartiles, sep=" ", header=None, on_bad_lines='skip')
     df = df.rename(columns={df.columns[0]: 'density', df.columns[1]: 'q1', df.columns[2]: 'q3'})
-   #df = df.rename(columns={df.columns[0]: 'mass', df.columns[1]: 'q1', df.columns[2]: 'q3'})
+    # df = df.rename(columns={df.columns[0]: 'mass', df.columns[1]: 'q1', df.columns[2]: 'q3'})
 
-#     df = df[df['mass'] >0.5]
+    # df = df[df['mass'] >0.5]
 #     # print(df)
     dens=df['density'].to_numpy()
     q1=df['q1'].to_numpy()
     #plt.plot(q1, mass, color='black' , linestyle='dashed', label=f'with delta CI90')
-    plt.plot(dens, q1, color=colors[i%3] , linestyle='dashed', label=f'EOS {num}')
+    plt.plot(dens, q1, color=colors[i%3] , linestyle='dashed')
     q3=df['q3'].to_numpy()
     #print(len(q3))
     plt.plot(dens, q3, color=colors[i%3], linestyle='dashed')
-    plt.fill_between(dens, q1, q3, color=colors[i%3], alpha=0.2)
-#     df_nodelta = pd.read_csv(no_delta, sep="   ", header=None, on_bad_lines='skip')
-#     df_nodelta = df_nodelta.rename(columns={df_nodelta.columns[0]: 'e0', df_nodelta.columns[1]: 'M', df_nodelta.columns[2]: 'R', df_nodelta.columns[3]: 'Mb', df_nodelta.columns[4]: 'rc'})
-#     max_mass = df_nodelta['M'].max()
-#     radius_max_mass = df_nodelta[df_nodelta['M'] == max_mass]['R'].values[0]
-#     df_nodelta = df_nodelta[df_nodelta['R'] > radius_max_mass]
-#     df_nodelta = df_nodelta[df_nodelta['M'] > 0.5]
-#     df_nodelta = df_nodelta[df_nodelta['R'] < 16.5]
-#     xi=df_nodelta['R'].to_numpy()
-#     yi=df_nodelta['M'].to_numpy()
-#     plt.plot(xi, yi, color=colors[i], label=f'EOS {num}', linewidth=7.0)
+    plt.fill_between(dens, q1, q3, color=colors[i%3], alpha=0.3, label=f'EOS {num}')
+    # df_nodelta = pd.read_csv(no_delta, sep="   ", header=None, on_bad_lines='skip')
+    # df_nodelta = df_nodelta.rename(columns={df_nodelta.columns[0]: 'e0', df_nodelta.columns[1]: 'M', df_nodelta.columns[2]: 'R', df_nodelta.columns[3]: 'Mb', df_nodelta.columns[4]: 'rc'})
+    # max_mass = df_nodelta['M'].max()
+    # radius_max_mass = df_nodelta[df_nodelta['M'] == max_mass]['R'].values[0]
+    # df_nodelta = df_nodelta[df_nodelta['R'] > radius_max_mass]
+    # df_nodelta = df_nodelta[df_nodelta['M'] > 0.5]
+    # df_nodelta = df_nodelta[df_nodelta['R'] < 16.5]
+    # xi=df_nodelta['R'].to_numpy()
+    # yi=df_nodelta['M'].to_numpy()
+    # plt.plot(xi, yi, color=colors[i], label=f'EOS {num}', linewidth=7.0)
     # df_nodelta2 = pd.read_csv(no_delta2, sep="   ", header=None, on_bad_lines='skip')
     # df_nodelta2 = df_nodelta2.rename(columns={df_nodelta2.columns[0]: 'e0', df_nodelta2.columns[1]: 'M', df_nodelta2.columns[2]: 'R', df_nodelta2.columns[3]: 'Mb', df_nodelta2.columns[4]: 'rc'})
     # df_nodelta2 = df_nodelta2[df_nodelta2['M'] > 0.5]
@@ -89,21 +90,22 @@ for num in eos_number:
     # xi=df_nodelta2['R'].to_numpy()
     # yi=df_nodelta2['M'].to_numpy()
     # plt.plot(xi, yi, color='red', label='wo delta FSU2H')
-    #plt.legend()
-#     #plt.xlim(11, 15)
+    # plt.legend()
+    #plt.xlim(11, 15)
     # plt.xlabel('Radius')
     # plt.ylabel('Mass')
-    #plt.title(f"EOS{num}")
-    #plt.savefig(f"EOS{num}/with-without-delta.png")
-    #plt.show()
+    # plt.title(f"EOS{num}")
+    # # plt.savefig(f"EOS{num}/with-without-delta.png")
+    # plt.show()
     #plt.savefig(f"EOS{num}/mr-q-compare.png")
-    proton_fraction=[]
+    # proton_fraction=[]
+    mass=[]
     i+=1
  
 plt.legend()
-# #     #plt.xlim(11, 15)
-# plt.xlabel('Radius')
-# plt.ylabel('Mass')
-plt.title(f"Proton fraction")
+#     #plt.xlim(11, 15)
+plt.ylabel('Proton fraction')
+plt.xlabel('Density')
+# plt.title(f"Proton fraction")
 plt.savefig(f"proton-fraction-quartiles.png")
 plt.show()

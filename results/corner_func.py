@@ -111,7 +111,7 @@ def set_title_neighbor(ax, label, loc="center", **kwargs):
 eos_number=[8,20,21]
 
 
-#colors=['deepskyblue','deeppink','darkviolet']
+colors=['deepskyblue','deeppink','darkviolet']
 for i in eos_number:
 
 
@@ -158,9 +158,9 @@ for i in eos_number:
     print(good_columns1.shape)
     if i==21:
 
-        figure = corner.corner(good_columns1, labels=["grho","gdel","gwr","Esym", "L", "Ksym", "Qsym"], title_fmt='.2f', show_titles=True ,color='deepskyblue', smooth=True, smooth1d=True, label_kwargs=dict(fontweight='bold', fontsize=13), title_kwargs=dict(fontsize=10, color='deepskyblue'), quantiles=[0.16, 0.5, 0.84], label='EOS8')
-        corner.corner(good_columns2,fig=figure, color='deeppink', quantiles=[0.16, 0.5, 0.84], label='EOS 20',show_titles=True, smooth=True, smooth1d=True,title_kwargs=dict(fontsize=20, color='deeppink'))
-        corner.corner(good_columns3,fig=figure, color='darkviolet', quantiles=[0.16, 0.5, 0.84], label='EOS 21',show_titles=True, smooth=True, smooth1d=True,title_kwargs=dict(fontsize=20, color='darkviolet'))
+        figure = corner.corner(good_columns1, labels=["grho","gdel","gwr","Esym", "L", "Ksym", "Qsym"], title_fmt='.2f', show_titles=False ,color='deepskyblue', smooth=True, smooth1d=True, label_kwargs=dict(fontsize=26), title_kwargs=dict(fontsize=26, color='deepskyblue'), quantiles=[0.16, 0.5, 0.84], label='EOS8')
+        corner.corner(good_columns2,fig=figure, color='deeppink', quantiles=[0.16, 0.5, 0.84], label='EOS 20',show_titles=False, smooth=True, smooth1d=True,title_kwargs=dict(fontsize=26, color='deeppink'))
+        corner.corner(good_columns3,fig=figure, color='darkviolet', quantiles=[0.16, 0.5, 0.84], label='EOS 21',show_titles=False, smooth=True, smooth1d=True,title_kwargs=dict(fontsize=26, color='darkviolet'))
 
     
     os.remove(corner_plot)
@@ -198,7 +198,9 @@ for i in eos_number:
 #     )
 #plt.title("EOS8, EOS20, EOS21", fontsize=20)
 #plt.legend(["EOS8", "EOS20", "EOS21"], fontsize=20, frameon=False, loc='lower left')
-plt.show()
-#figure.savefig(f"corner-plots/corner-full2.png")
+figure.legend(['EOS 8','_','_','_','EOS 20','_','_','_','EOS 21'], fontsize=30, frameon=False, loc='upper right')
+
+# plt.show()
+figure.savefig(f"corner-plots/corner-full2.png")
 
 

@@ -10,8 +10,7 @@ colors=['deepskyblue', 'deeppink', 'darkviolet']
 
 eos_number=[8,20,21]
 font = {'family' : 'normal',
-        'weight' : 'bold',
-        'size'   : 26}
+        'size'   : 30}
 
 plt.rc('font', **font)
 
@@ -24,7 +23,7 @@ for num in eos_number:
     q3=[]
     #plt.clf()
     #print(f"EOS{num}")
-    quartiles = f"../EOS{num}/output-quartile-CI90_{num}.txt"
+    quartiles = f"../EOS{num}/output-quartile-2-CI90_{num}.txt"
     no_delta = f"../EOS{num}/old_eos{num}_neutron.dat"
     # no_delta2 = f"fsu2h.out"
     df = pd.read_csv(quartiles, sep=" ", header=None, on_bad_lines='skip')
@@ -51,8 +50,8 @@ for num in eos_number:
     i+=1
 plt.ylim(0.5, 2.75)
 plt.legend()
-plt.xlabel(r'$R [km]$')
-plt.ylabel(r'$M [M_{\odot}]$')
+plt.xlabel(r'$R [km]$', labelpad=20)
+plt.ylabel(r'$M [M_{\odot}]$', labelpad=20)
 
 ## NICER DATA
 DIR = './' # colocar o diretório dos dados

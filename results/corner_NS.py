@@ -43,6 +43,8 @@ for i in eos_number:
         temp_df = df_NS[df_NS['label'] == label]
         max_mass = temp_df['mass'].max()
         radius_max_mass = temp_df[temp_df['mass'] == max_mass]['radius'].values[0]
+        #let's filter the data to avoid junk data
+        # if max_mass < 2.5:
         max_masses.append(max_mass)
         radii_max_masses.append(radius_max_mass)
 
@@ -86,17 +88,23 @@ for i in eos_number:
     })
     del df['label']
     
+    #let's filter the data to avoid junk data
+    df = df[df['Ksym'] > -300]
+    df = df[df['L'] > 0]
+
     #now, let's include the sound speed data at Mmax
-    df_sound_speed = pd.read_csv(f"sound-speed-tov-data-eos{i}.dat", sep='\s+', engine='python')
+    df_sound_speed = pd.read_csv(f"../../big-results/sound-speed-tov-data-eos{i}.dat", sep='\s+', engine='python')
     df_sound_speed = df_sound_speed.rename(columns={df_sound_speed.columns[0]: 'label', df_sound_speed.columns[1]: 'Mmax', df_sound_speed.columns[2]: 'dp/de', df_sound_speed.columns[3]: 'dp/de**2', df_sound_speed.columns[4]: 'density_tov', df_sound_speed.columns[5]: 'density_sound_speed'})
     #filtering to dp/de < 1
     df_sound_speed = df_sound_speed[df_sound_speed['dp/de'] <= 1]
-    df_sound_speed = df_sound_speed[df_sound_speed['dp/de'] > 0]
+    df_sound_speed = df_sound_speed[df_sound_speed['dp/de'] > 0.35]
 
     #the same with yp
-    df_proton_fraction = pd.read_csv(f"proton-fraction-tov-data-eos{i}.dat", sep='\s+', engine='python')
+    df_proton_fraction = pd.read_csv(f"../../big-results/proton-fraction-tov-data-eos{i}.dat", sep='\s+', engine='python')
     df_proton_fraction = df_proton_fraction.rename(columns={df_proton_fraction.columns[0]: 'label', df_proton_fraction.columns[1]: 'Mmax', df_proton_fraction.columns[2]: 'Xi', df_proton_fraction.columns[3]: '1-Xi', df_proton_fraction.columns[4]: 'density_tov', df_proton_fraction.columns[5]: 'density_proton_fraction'})
-
+    #filtering
+    df_proton_fraction = df_proton_fraction[df_proton_fraction['1-Xi'] <= 0.16]
+    df_proton_fraction = df_proton_fraction[df_proton_fraction['1-Xi'] >= 0.1]
     
     # Convert properties dataframe to numpy array
     props[i] = df.to_numpy()
